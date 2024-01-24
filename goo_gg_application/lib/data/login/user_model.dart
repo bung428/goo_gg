@@ -12,4 +12,16 @@ class UserModel {
   );
 
   bool get modelIsNotEmpty => email.isNotEmpty && pwd.isNotEmpty;
+
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'pwd': pwd,
+    'recentAt': recentAt.toString(),
+  };
+  
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+    email: json['email'],
+    pwd: json['pwd'],
+    recentAt: DateTime.parse(json['recentAt'])
+  );
 }

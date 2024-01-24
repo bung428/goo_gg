@@ -4,10 +4,10 @@ import 'package:goo_gg_application/route/router.dart';
 import 'package:goo_gg_application/service/app_service.dart';
 import 'package:goo_gg_application/service/auth_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AuthService.instance.init();
+  await AuthService.instance.init();
   AppService.instance.init();
 
   runApp(const ProviderScope(child: GooGGApp()));
