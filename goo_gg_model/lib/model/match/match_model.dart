@@ -8,8 +8,8 @@ part 'match_model.g.dart';
 @freezed
 class MatchModel with _$MatchModel {
   factory MatchModel({
-    required MetaDataModel? metaData,
-    required MatchInfoModel? info,
+    required MetaDataModel metadata,
+    required MatchInfoModel info,
   }) = _MatchModel;
 
   factory MatchModel.fromJson(Map<String, dynamic> json) => _$MatchModelFromJson(json);

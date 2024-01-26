@@ -8,16 +8,13 @@ part of 'match_model.dart';
 
 _$MatchModelImpl _$$MatchModelImplFromJson(Map<String, dynamic> json) =>
     _$MatchModelImpl(
-      metaData: json['metaData'] == null
-          ? null
-          : MetaDataModel.fromJson(json['metaData'] as Map<String, dynamic>),
-      info: json['info'] == null
-          ? null
-          : MatchInfoModel.fromJson(json['info'] as Map<String, dynamic>),
+      metadata:
+          MetaDataModel.fromJson(json['metadata'] as Map<String, dynamic>),
+      info: MatchInfoModel.fromJson(json['info'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$MatchModelImplToJson(_$MatchModelImpl instance) =>
     <String, dynamic>{
-      'metaData': instance.metaData,
+      'metadata': instance.metadata,
       'info': instance.info,
     };

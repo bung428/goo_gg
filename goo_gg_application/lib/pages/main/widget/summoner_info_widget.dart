@@ -21,7 +21,6 @@ class SummonerInfoWidget extends StatelessWidget {
     final state = dateInfo.$1;
     final dateDesc = dateInfo.$2;
     final updateAt = dateDesc == 'same' ? model.updateAt : dateDesc;
-    print('KBG model : ${model.toJson()}');
     return Card(
       elevation: 2,
       child: Padding(

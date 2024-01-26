@@ -16,7 +16,7 @@ import 'package:goo_gg_model/model/summoner/summoner_account_model.dart';
 import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
 
 /// todo: 24시간만 유효한 devApi key
-const riotApiKey = 'RGAPI-b12ca12c-d37f-4cf4-9f20-4ffae2b6f82a';
+const riotApiKey = 'RGAPI-d086520b-00c7-43d7-bd17-12fae65ca395';
 
 const krBaseUrl = 'https://kr.api.riotgames.com';
 const asiaBaseUrl = 'https://asia.api.riotgames.com';
@@ -59,6 +59,23 @@ class SummonerRepository extends RiverRepository {
     }
   }
 
+  Future<ApiRespModel<SummonerModel?>> getSummonersByPuuid(String id) async {
+    try {
+      final response = await dio.get(
+        '$summonerApiUrl${SummonerRest.byPuuid.rest}/$id'
+      );
+      final model = SummonerAccountModel.fromJson(response.data);
+      final accountModel = await getAccountByPuuid(model.puuid);
+      if (accountModel == null) {
+        return ApiRespModel.fail(Exception('Account Model is null'));
+      }
+      final summonerModel = SummonerModel.fromModel(model, accountModel);
+      return ApiRespModel(model: summonerModel, state: ApiState.success);
+    } on DioException catch (e) {
+      return ApiRespModel.fail(e);
+    }
+  }
+
   Future<AccountModel?> getAccountByPuuid(String id) async {
     try {
       final response = await dio.get(
@@ -88,10 +105,11 @@ class SummonerRepository extends RiverRepository {
     }
   }
 
-  Future<List<String>?> getMatchListByPuuid(String id) async {
+  Future<List<String>?> getMatchListByPuuid(String id, int start) async {
     try {
+      final endTime = DateTime.now().millisecondsSinceEpoch;
       final response = await dio.get(
-        '$matchApiUrl${SummonerRest.byPuuid.rest}/$id/ids'
+        '$matchApiUrl${SummonerRest.byPuuid.rest}/$id/ids?endTime=$endTime&start=$start&count=5'
       );
       List list = response.data;
       return list.map((e) => e.toString()).toList();
@@ -102,9 +120,7 @@ class SummonerRepository extends RiverRepository {
 
   Future<MatchModel?> getMatchesByMatchId(String id) async {
     try {
-      final response = await dio.get(
-        '$matchApiUrl/$id'
-      );
+      final response = await dio.get('$matchApiUrl/$id');
       return MatchModel.fromJson(response.data);
     } on DioException catch (e) {
       return null;

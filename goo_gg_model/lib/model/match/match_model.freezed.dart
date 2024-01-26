@@ -20,8 +20,8 @@ MatchModel _$MatchModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MatchModel {
-  MetaDataModel? get metaData => throw _privateConstructorUsedError;
-  MatchInfoModel? get info => throw _privateConstructorUsedError;
+  MetaDataModel get metadata => throw _privateConstructorUsedError;
+  MatchInfoModel get info => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,10 +35,10 @@ abstract class $MatchModelCopyWith<$Res> {
           MatchModel value, $Res Function(MatchModel) then) =
       _$MatchModelCopyWithImpl<$Res, MatchModel>;
   @useResult
-  $Res call({MetaDataModel? metaData, MatchInfoModel? info});
+  $Res call({MetaDataModel metadata, MatchInfoModel info});
 
-  $MetaDataModelCopyWith<$Res>? get metaData;
-  $MatchInfoModelCopyWith<$Res>? get info;
+  $MetaDataModelCopyWith<$Res> get metadata;
+  $MatchInfoModelCopyWith<$Res> get info;
 }
 
 /// @nodoc
@@ -54,41 +54,33 @@ class _$MatchModelCopyWithImpl<$Res, $Val extends MatchModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? metaData = freezed,
-    Object? info = freezed,
+    Object? metadata = null,
+    Object? info = null,
   }) {
     return _then(_value.copyWith(
-      metaData: freezed == metaData
-          ? _value.metaData
-          : metaData // ignore: cast_nullable_to_non_nullable
-              as MetaDataModel?,
-      info: freezed == info
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as MetaDataModel,
+      info: null == info
           ? _value.info
           : info // ignore: cast_nullable_to_non_nullable
-              as MatchInfoModel?,
+              as MatchInfoModel,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $MetaDataModelCopyWith<$Res>? get metaData {
-    if (_value.metaData == null) {
-      return null;
-    }
-
-    return $MetaDataModelCopyWith<$Res>(_value.metaData!, (value) {
-      return _then(_value.copyWith(metaData: value) as $Val);
+  $MetaDataModelCopyWith<$Res> get metadata {
+    return $MetaDataModelCopyWith<$Res>(_value.metadata, (value) {
+      return _then(_value.copyWith(metadata: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $MatchInfoModelCopyWith<$Res>? get info {
-    if (_value.info == null) {
-      return null;
-    }
-
-    return $MatchInfoModelCopyWith<$Res>(_value.info!, (value) {
+  $MatchInfoModelCopyWith<$Res> get info {
+    return $MatchInfoModelCopyWith<$Res>(_value.info, (value) {
       return _then(_value.copyWith(info: value) as $Val);
     });
   }
@@ -102,12 +94,12 @@ abstract class _$$MatchModelImplCopyWith<$Res>
       __$$MatchModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({MetaDataModel? metaData, MatchInfoModel? info});
+  $Res call({MetaDataModel metadata, MatchInfoModel info});
 
   @override
-  $MetaDataModelCopyWith<$Res>? get metaData;
+  $MetaDataModelCopyWith<$Res> get metadata;
   @override
-  $MatchInfoModelCopyWith<$Res>? get info;
+  $MatchInfoModelCopyWith<$Res> get info;
 }
 
 /// @nodoc
@@ -121,18 +113,18 @@ class __$$MatchModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? metaData = freezed,
-    Object? info = freezed,
+    Object? metadata = null,
+    Object? info = null,
   }) {
     return _then(_$MatchModelImpl(
-      metaData: freezed == metaData
-          ? _value.metaData
-          : metaData // ignore: cast_nullable_to_non_nullable
-              as MetaDataModel?,
-      info: freezed == info
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as MetaDataModel,
+      info: null == info
           ? _value.info
           : info // ignore: cast_nullable_to_non_nullable
-              as MatchInfoModel?,
+              as MatchInfoModel,
     ));
   }
 }
@@ -140,19 +132,19 @@ class __$$MatchModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MatchModelImpl implements _MatchModel {
-  _$MatchModelImpl({required this.metaData, required this.info});
+  _$MatchModelImpl({required this.metadata, required this.info});
 
   factory _$MatchModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MatchModelImplFromJson(json);
 
   @override
-  final MetaDataModel? metaData;
+  final MetaDataModel metadata;
   @override
-  final MatchInfoModel? info;
+  final MatchInfoModel info;
 
   @override
   String toString() {
-    return 'MatchModel(metaData: $metaData, info: $info)';
+    return 'MatchModel(metadata: $metadata, info: $info)';
   }
 
   @override
@@ -160,14 +152,14 @@ class _$MatchModelImpl implements _MatchModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MatchModelImpl &&
-            (identical(other.metaData, metaData) ||
-                other.metaData == metaData) &&
+            (identical(other.metadata, metadata) ||
+                other.metadata == metadata) &&
             (identical(other.info, info) || other.info == info));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, metaData, info);
+  int get hashCode => Object.hash(runtimeType, metadata, info);
 
   @JsonKey(ignore: true)
   @override
@@ -185,16 +177,16 @@ class _$MatchModelImpl implements _MatchModel {
 
 abstract class _MatchModel implements MatchModel {
   factory _MatchModel(
-      {required final MetaDataModel? metaData,
-      required final MatchInfoModel? info}) = _$MatchModelImpl;
+      {required final MetaDataModel metadata,
+      required final MatchInfoModel info}) = _$MatchModelImpl;
 
   factory _MatchModel.fromJson(Map<String, dynamic> json) =
       _$MatchModelImpl.fromJson;
 
   @override
-  MetaDataModel? get metaData;
+  MetaDataModel get metadata;
   @override
-  MatchInfoModel? get info;
+  MatchInfoModel get info;
   @override
   @JsonKey(ignore: true)
   _$$MatchModelImplCopyWith<_$MatchModelImpl> get copyWith =>
