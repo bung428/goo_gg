@@ -16,7 +16,7 @@ import 'package:goo_gg_model/model/summoner/summoner_account_model.dart';
 import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
 
 /// todo: 24시간만 유효한 devApi key
-const riotApiKey = 'RGAPI-d086520b-00c7-43d7-bd17-12fae65ca395';
+const riotApiKey = 'RGAPI-0d53c5ce-a778-44a5-855f-c90cd104bf80';
 
 const krBaseUrl = 'https://kr.api.riotgames.com';
 const asiaBaseUrl = 'https://asia.api.riotgames.com';

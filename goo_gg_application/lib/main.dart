@@ -31,6 +31,7 @@ class GooGGApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: GoogleFonts.roboto().fontFamily,
       ),
+      // darkTheme: ThemeData.dark(),
       routerConfig: appRouters,
     );
   }

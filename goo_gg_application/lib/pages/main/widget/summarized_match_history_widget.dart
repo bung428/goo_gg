@@ -49,7 +49,7 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 24,),
+          const SizedBox(width: 12,),
           Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start, // 추가
@@ -65,7 +65,7 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
                       imageUrl: model.summonerRecord.championUrl,
                     ),
                   ),
-                  const SizedBox(width: 8,),
+                  const SizedBox(width: 4,),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -84,7 +84,7 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
                       )
                     ],
                   ),
-                  const SizedBox(width: 8,),
+                  const SizedBox(width: 4,),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -103,7 +103,7 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
                       )
                     ],
                   ),
-                  const SizedBox(width: 8,),
+                  const SizedBox(width: 4,),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

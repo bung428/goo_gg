@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_base_template/river_pod/river_notifier.dart';
 import 'package:flutter_base_template/stream_subscription.dart';
 import 'package:goo_gg_application/data/model/match/match_history_model.dart';
@@ -15,6 +16,10 @@ class MainNotifier extends RiverNotifier<MainViewModel>
   MainNotifier(super.state, this.repository);
 
   final SummonerRepository repository;
+  final scrollController = ScrollController();
+
+  int startMatchId = 0;
+  List<String> matchIds = [];
 
   @override
   void onInit() async {
@@ -46,7 +51,7 @@ class MainNotifier extends RiverNotifier<MainViewModel>
         state = state.copyWith(
           summonerModel: _.$1,
           entries: _.$2,
-          shortMatches: _.$3,
+          matches: _.$3,
         );
       }
     );
@@ -60,7 +65,8 @@ class MainNotifier extends RiverNotifier<MainViewModel>
     List<MatchHistoryModel> shortMatches = [];
     if (summonerModel != null) {
       entries = await repository.getSummonerEntriesById(summonerModel.id);
-      final matchIds = await repository.getMatchListByPuuid(summonerModel.puuid, 0);
+      matchIds = await repository
+          .getMatchListByPuuid(summonerModel.puuid, startMatchId) ?? [];
       shortMatches = await getShortMatches(matchIds, summonerModel.puuid);
     }
 
@@ -89,51 +95,60 @@ class MainNotifier extends RiverNotifier<MainViewModel>
     return list;
   }
 
-  void test() async {
-    final result = await repository.getMatchesByMatchId('KR_6917338399');
-    print('KBG result : $result');
-  }
-
   void changeMatchExpansion(int index, bool isExpanded) {
-    print('KBG index : $index : isExpanded : $isExpanded');
-    List<MatchHistoryModel>? list = state.shortMatches;
+    List<MatchHistoryModel>? list = state.matches;
     if (list == null || list.isEmpty) return;
 
     list[index] = list[index].copyWith(expanded: isExpanded);
-    state = state.copyWith(shortMatches: list);
+    state = state.copyWith(matches: list);
   }
-}
 
-class TestModel {
-  final String title;
-  final String body;
-  bool expanded;
+  Future<void> loadMoreMatches() async {
+    final context = buildContext;
+    if (context == null) return;
+    if (matchIds.isEmpty) return;
 
-  TestModel({
-    required this.title,
-    required this.body,
-    this.expanded = false
-  });
+    final puuid = state.puuid;
+    if (puuid == null) return;
+
+    streamSubscription<List<MatchHistoryModel>>(
+      stream: Rx.fromCallable(() async {
+        startMatchId += matchIds.length;
+        List<String> currentMatchIds = await repository
+            .getMatchListByPuuid(puuid, startMatchId) ?? [];
+        matchIds = [...matchIds, ...currentMatchIds];
+        return await getShortMatches(currentMatchIds, puuid);
+      }),
+      onShowLoading: () => showLoadingDialog(context),
+      onHideLoading: () => hideLoadingDialog(context),
+      onData: (_) {
+        var matches = state.matches;
+        state = state.copyWith(matches: [...matches ?? [], ..._]);
+      }
+    );
+  }
 }
 
 class MainViewModel {
   final SummonerModel? summonerModel;
   final List<SummonerEntryModel>? entries;
-  final List<MatchHistoryModel>? shortMatches;
+  final List<MatchHistoryModel>? matches;
 
   MainViewModel({
     this.summonerModel,
-    this.shortMatches,
+    this.matches,
     this.entries,
   });
+
+  String? get puuid => summonerModel?.puuid;
 
   MainViewModel copyWith({
     SummonerModel? summonerModel,
     List<SummonerEntryModel>? entries,
-    List<MatchHistoryModel>? shortMatches,
+    List<MatchHistoryModel>? matches,
   }) => MainViewModel(
     summonerModel: summonerModel ?? this.summonerModel,
-    shortMatches: shortMatches ?? this.shortMatches,
+    matches: matches ?? this.matches,
     entries: entries ?? this.entries,
   );
 }
