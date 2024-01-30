@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goo_gg_application/core/env/app_config.dart';
 import 'package:goo_gg_application/route/router.dart';
 import 'package:goo_gg_application/service/app_service.dart';
 import 'package:goo_gg_application/service/auth_service.dart';
@@ -9,6 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('App Config : riotApiKey : $riotApiKey');
 
   await AuthService.instance.init();
   AppService.instance.init();

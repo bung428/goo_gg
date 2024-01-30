@@ -1,7 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_base_template/river_pod/river_notifier.dart';
 import 'package:flutter_base_template/stream_subscription.dart';
 import 'package:goo_gg_application/data/model/match/match_history_model.dart';
+import 'package:goo_gg_application/data/riot_data_cdn_url.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
 import 'package:goo_gg_application/service/auth_service.dart';
@@ -53,6 +56,10 @@ class MainNotifier extends RiverNotifier<MainViewModel>
           entries: _.$2,
           matches: _.$3,
         );
+      },
+      onError: (e) {
+        showExceptionBuilder(context, e);
+        return;
       }
     );
   }
@@ -79,18 +86,45 @@ class MainNotifier extends RiverNotifier<MainViewModel>
   ) async {
     if (matchIds == null || matchIds.isEmpty) return [];
     List<MatchHistoryModel> list = [];
+    List<MatchInfoModel> infoList = [];
     for (final id in matchIds) {
       final result = await repository.getMatchesByMatchId(id);
       if (result != null) {
-        final infoModel = result.info;
-        list.add(MatchHistoryModel(
-          gameInfo: infoModel.getGameInfoModel(puuid),
-          summonerRecord: infoModel.getSummonerInfoModel(puuid),
-          blueTeam: infoModel.blueTeam,
-          redTeam: infoModel.redTeam,
-          expanded: false,
-        ));
+        infoList.add(result.info);
+        // final infoModel = result.info;
+        // // final image = await repository.getImageData(infoModel.c)
+        // list.add(MatchHistoryModel(
+        //   summarizedMatch: SummarizedMatchModel(
+        //     gameInfo: infoModel.getGameInfo(puuid),
+        //     summonerRecord: infoModel.getSummonerInfo(puuid),
+        //   ),
+        //   gameDetailInfo: infoModel.gameDetailInfo(),
+        //   gameAnalysis: infoModel.getGameAnalysis(),
+        //   expanded: false,
+        // ));
       }
+    }
+
+    for (final info in infoList) {
+      List<ui.Image?> images = [];
+      for (final urlStr in info.champUrls) {
+        final url = DataCdnUrl.getChampionIconUrl(urlStr);
+        final imgList = await repository.getImageData(url);
+        if (imgList == null) {
+          images.add(null);
+        } else {
+          images.add(await decodeImageFromList(imgList));
+        }
+      }
+      list.add(MatchHistoryModel(
+        summarizedMatch: SummarizedMatchModel(
+          gameInfo: info.getGameInfo(puuid),
+          summonerRecord: info.getSummonerInfo(puuid),
+        ),
+        gameDetailInfo: info.gameDetailInfo(),
+        gameAnalysis: info.getGameAnalysis(images),
+        expanded: false,
+      ));
     }
     return list;
   }

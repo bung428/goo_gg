@@ -45,39 +45,37 @@ extension MatchInfoModelExt on MatchInfoModel {
         : '${diff.inMinutes % 60}분 ${diff.inSeconds % 60}초';
   }
 
-  List<PlayerInfoModel> get blueTeam {
-    final blueTeam = participants.sublist(0, 4);
-    return blueTeam
-        .map((p) => PlayerInfoModel(
-            puuid: p.puuid,
-            championName: p.championName,
-            riotIdGameName: p.riotIdGameName,
-            participantsIndex: blueTeam.indexOf(p)))
-        .toList();
+  int get blueTotalKill {
+    final blueKills = participants.sublist(0, 5).map((e) => e.kills).toList();
+    return blueKills.fold(0, (sum, value) => sum + value);
   }
 
-  List<PlayerInfoModel> get redTeam {
-    final redTeam = participants.sublist(4);
-    return redTeam
-        .map((p) => PlayerInfoModel(
-            puuid: p.puuid,
-            championName: p.championName,
-            riotIdGameName: p.riotIdGameName,
-            participantsIndex: redTeam.indexOf(p)))
-        .toList();
+  int get redTotalKill {
+    final redKills = participants.sublist(5).map((e) => e.kills).toList();
+    return redKills.fold(0, (sum, value) => sum + value);
   }
-}
+  
+  List<String> get champUrls => participants.map((e) => e.championName).toList();
 
-class PlayerInfoModel {
-  final String puuid;
-  final String championName;
-  final String riotIdGameName;
-  final int participantsIndex;
-
-  PlayerInfoModel({
-    required this.puuid,
-    required this.championName,
-    required this.riotIdGameName,
-    required this.participantsIndex
-  });
+  // List<PlayerInfoModel> get blueTeam {
+  //   final blueTeam = participants.sublist(0, 4);
+  //   return blueTeam
+  //       .map((p) => PlayerInfoModel(
+  //           puuid: p.puuid,
+  //           championName: p.championName,
+  //           riotIdGameName: p.riotIdGameName,
+  //           participantsIndex: blueTeam.indexOf(p)))
+  //       .toList();
+  // }
+  //
+  // List<PlayerInfoModel> get redTeam {
+  //   final redTeam = participants.sublist(4);
+  //   return redTeam
+  //       .map((p) => PlayerInfoModel(
+  //           puuid: p.puuid,
+  //           championName: p.championName,
+  //           riotIdGameName: p.riotIdGameName,
+  //           participantsIndex: redTeam.indexOf(p)))
+  //       .toList();
+  // }
 }

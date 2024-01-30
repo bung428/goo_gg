@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:goo_gg_model/model/match/enum/rune_type.dart';
 import 'package:goo_gg_model/model/match/enum/spell_type.dart';
 import 'package:goo_gg_model/model/match/perk/rune_model.dart';
+import 'package:collection/collection.dart';
 
 part 'participant_model.freezed.dart';
 part 'participant_model.g.dart';
@@ -21,7 +22,7 @@ class ParticipantModel with _$ParticipantModel {
     required int damageDealtToBuildings,
     required int damageDealtToObjectives,
     required int damageDealtToTurrets,
-    required int damageSelfMitigated,
+    required int damageSelfMitigated, /// 총 딜량
     required int deaths,
     required int detectorWardsPlaced,
     required int doubleKills,
@@ -32,7 +33,7 @@ class ParticipantModel with _$ParticipantModel {
     required bool firstTowerKill,
     required bool gameEndedInEarlySurrender,
     required bool gameEndedInSurrender,
-    required int goldEarned,
+    required int goldEarned, /// 골드 획득
     required int goldSpent,
     required String individualPosition,
     required int inhibitorKills,
@@ -92,9 +93,9 @@ class ParticipantModel with _$ParticipantModel {
     required int timeCCingOthers,
     required int timePlayed,
     required int totalDamageDealt,
-    required int totalDamageDealtToChampions,
+    required int totalDamageDealtToChampions, /// 챔피언에게 가한 피해량
     required int totalDamageShieldedOnTeammates,
-    required int totalDamageTaken,
+    required int totalDamageTaken, /// 총 받은 피해량
     required int totalHeal,
     required int totalHealsOnTeammates,
     required int totalMinionsKilled,
@@ -105,14 +106,14 @@ class ParticipantModel with _$ParticipantModel {
     required int trueDamageDealt,
     required int trueDamageDealtToChampions,
     required int trueDamageTaken,
-    required int turretKills,
+    required int turretKills, /// 포탑 제거
     required int turretTakedowns,
     required int turretsLost,
     required int unrealKills,
-    required int visionScore,
-    required int visionWardsBoughtInGame,
+    required int visionScore, /// 시야점수
+    required int visionWardsBoughtInGame, /// 제어와드
     required int wardsKilled,
-    required int wardsPlaced,
+    required int wardsPlaced, /// 와드 설치
     required bool win,
   }) = _ParticipantModel;
 
@@ -120,23 +121,27 @@ class ParticipantModel with _$ParticipantModel {
 }
 
 extension ParticipantModelExt on ParticipantModel {
-  SummonerSpell get spellD => SummonerSpell.values.firstWhere((e) => e.id == summoner1Id);
-  SummonerSpell get spellF => SummonerSpell.values.firstWhere((e) => e.id == summoner2Id);
+  SummonerSpell? get spellD => SummonerSpell.values.firstWhereOrNull((e) => e.id == summoner1Id);
+  SummonerSpell? get spellF => SummonerSpell.values.firstWhereOrNull((e) => e.id == summoner2Id);
 
-  RuneType get mainRune {
+  RuneType? get mainRune {
     final mainRuneId = perks
         .styles
-        .firstWhere((e) => e.description == 'primaryStyle')
-        .style;
-    return RuneType.values.firstWhere((r) => r.id == mainRuneId);
+        .firstWhereOrNull((e) => e.description == 'primaryStyle')
+        ?.style;
+    return RuneType.values.firstWhereOrNull((r) => r.id == mainRuneId);
   }
-  RuneType get subRune {
+  RuneType? get subRune {
     final mainRuneId = perks
         .styles
-        .firstWhere((e) => e.description == 'subStyle')
-        .style;
-    return RuneType.values.firstWhere((r) => r.id == mainRuneId);
+        .firstWhereOrNull((e) => e.description == 'subStyle')
+        ?.style;
+    return RuneType.values.firstWhereOrNull((r) => r.id == mainRuneId);
   }
+
+  double get grade => (kills + assists) / deaths;
+
+  // doubel get killInvolvement => (kills + assists) / total
 }
 /// 큐 타입 / 몇일전 / 승패 / 게임시간
 ///

@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
 import 'package:flutter_base_template/river_pod/river_template.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goo_gg_application/data/model/match/game_detail_info_model.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
 import 'package:goo_gg_application/pages/main/main_notifier.dart';
+import 'package:goo_gg_application/pages/main/widget/player_analysis_widget.dart';
 import 'package:goo_gg_application/pages/main/widget/summarized_match_history_widget.dart';
 import 'package:goo_gg_application/pages/main/widget/summoner_info_widget.dart';
+import 'package:goo_gg_application/pages/main/widget/player_match_detail_widget.dart';
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/widget/load_more_listview.dart';
 import 'package:goo_gg_application/widget/search_widget.dart';
+import 'package:goo_gg_application/widget/value_graph_widget.dart';
 
 class MainPage extends RiverProvider<MainNotifier, MainViewModel> {
   const MainPage({super.key});
@@ -55,19 +59,25 @@ class MainPage extends RiverProvider<MainNotifier, MainViewModel> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: provider.matches!.length,
                       itemBuilder: (context, index) {
-                        final model = provider.matches![index];
-                        final gameResult = model.gameInfo.gameResult;
+                        final summarized = provider.matches![index].summarizedMatch;
+                        final gameDetailInfo = provider.matches![index].gameDetailInfo;
+                        final analysis = provider.matches![index].gameAnalysis;
+                        final gameResult = summarized.gameInfo.gameResult;
                         return Card(
                           elevation: 2,
                           color: gameResult.color.withOpacity(0.25),
                           child: ExpansionTile(
-                            title: SummarizedMatchHistoryWidget(model: model),
+                            title: SummarizedMatchHistoryWidget(model: summarized),
                             children: [
-                              Text('asdfasdf'),
-                              Text('asdfasdf'),
-                              Text('asdfasdf'),
-                              Text('asdfasdf'),
-                              Text('asdfasdf'),
+                              SizedBox(
+                                height: 368,
+                                child: PageView(
+                                  children: [
+                                    PlayerMatchDetailWidget(model: gameDetailInfo),
+                                    PlayerAnalysisWidget(list: analysis),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         );

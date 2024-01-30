@@ -145,3 +145,7 @@ Future<void> appErrorDialog(
       },
       actions: [(null, '확인', null)]);
 }
+
+Future<void> showExceptionBuilder(BuildContext context, Object e) async {
+  return appErrorDialog(context, null, e.toString());
+}

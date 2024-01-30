@@ -1,0 +1,1 @@
+const riotApiKey = String.fromEnvironment('riotApiKey');

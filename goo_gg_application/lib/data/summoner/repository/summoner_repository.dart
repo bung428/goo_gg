@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_base_template/river_pod/river_repository.dart';
+import 'package:goo_gg_application/core/env/app_config.dart';
 import 'package:goo_gg_application/data/summoner/enum/riot_api_type.dart';
 import 'package:goo_gg_application/data/summoner/enum/summoner_rest.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
@@ -14,9 +16,6 @@ import 'package:goo_gg_model/model/summoner/account_model.dart';
 import 'package:goo_gg_model/model/summoner/enum/queue_type.dart';
 import 'package:goo_gg_model/model/summoner/summoner_account_model.dart';
 import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
-
-/// todo: 24시간만 유효한 devApi key
-const riotApiKey = 'RGAPI-0d53c5ce-a778-44a5-855f-c90cd104bf80';
 
 const krBaseUrl = 'https://kr.api.riotgames.com';
 const asiaBaseUrl = 'https://asia.api.riotgames.com';
@@ -126,4 +125,20 @@ class SummonerRepository extends RiverRepository {
       return null;
     }
   }
+  
+  Future<Uint8List?> getImageData(String url) async {
+    try {
+      // final response = await dio.get(url);
+      final response = await Dio().get<Uint8List>(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: dio.options.headers
+        )
+      );
+      return response.data;
+    } on DioException catch (e) {
+      return null;
+    }
+}
 }

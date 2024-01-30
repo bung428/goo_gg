@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum RuneType {
   domination(8100, 'perk-images/Styles/7200_Domination.png'),
   precision(8000, 'perk-images/Styles/7201_Precision.png'),

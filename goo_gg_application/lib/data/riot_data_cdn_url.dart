@@ -7,14 +7,18 @@ class DataCdnUrl {
   static String getChampionIconUrl(String value) =>
       '$base/cdn/$version/img/$champion/$value.png';
 
-  static String getSpellIconUrl(String value) =>
-      '$base/cdn/$version/img/$spell/$value.png';
+  static String getSpellIconUrl(String? value) {
+    if (value == null) return '';
+    return '$base/cdn/$version/img/$spell/$value.png';
+  }
 
   static String getItemIconUrl(String value) {
     if (value == '0') return '';
     return '$base/cdn/$version/img/item/$value.png';
   }
 
-  static String getRuneIconUrl(String value) =>
-      'https://ddragon.canisback.com/img/$value';
+  static String getRuneIconUrl(String? value) {
+    if (value == null) return '';
+    return 'https://ddragon.canisback.com/img/$value';
+  }
 }

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
 import 'package:goo_gg_application/data/model/match/match_history_model.dart';
 import 'package:goo_gg_application/main.dart';
+import 'package:goo_gg_application/widget/app_cached_network_image.dart';
 
 class SummarizedMatchHistoryWidget extends StatelessWidget {
-  final MatchHistoryModel model;
+  final SummarizedMatchModel model;
 
   const SummarizedMatchHistoryWidget({super.key, required this.model});
 
@@ -57,30 +58,36 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ClipOval(
-                    child: CachedNetworkImage(
-                      width: 48,
-                      height: 48 ,
-                      fit: BoxFit.contain,
-                      imageUrl: model.summonerRecord.championUrl,
-                    ),
-                  ),
-                  const SizedBox(width: 4,),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
+                  Stack(
                     children: [
-                      CachedNetworkImage(
-                        width: 16,
-                        height: 16,
-                        fit: BoxFit.contain,
-                        imageUrl: model.summonerRecord.spells.first
+                      ClipOval(
+                        child: AppCachedNetworkImage(
+                          size: 48,
+                          url: model.summonerRecord.championUrl,
+                        ),
                       ),
-                      const SizedBox(height: 4,),
-                      CachedNetworkImage(
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
                           width: 16,
                           height: 16,
-                          fit: BoxFit.contain,
-                          imageUrl: model.summonerRecord.spells.last
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: theme.textColor,
+                          ),
+                          child: Center(
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                model.summonerRecord.championLevel.toString(),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.scaffoldBackgroundColor
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -88,19 +95,30 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CachedNetworkImage(
-                          width: 16,
-                          height: 16,
-                          fit: BoxFit.contain,
-                          imageUrl: model.summonerRecord.runes.first
+                      AppCachedNetworkImage(
+                        url: model.summonerRecord.spells.first,
+                        size: 16,
                       ),
                       const SizedBox(height: 4,),
-                      CachedNetworkImage(
-                          width: 16,
-                          height: 16,
-                          fit: BoxFit.contain,
-                          imageUrl: model.summonerRecord.runes.last
-                      )
+                      AppCachedNetworkImage(
+                        url: model.summonerRecord.spells.last,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 4,),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppCachedNetworkImage(
+                        url: model.summonerRecord.runes.first,
+                        size: 16,
+                      ),
+                      const SizedBox(height: 4,),
+                      AppCachedNetworkImage(
+                        url: model.summonerRecord.runes.last,
+                        size: 16,
+                      ),
                     ],
                   ),
                   const SizedBox(width: 4,),
@@ -166,16 +184,17 @@ class SummarizedMatchHistoryWidget extends StatelessWidget {
               const SizedBox(height: 24),
               Row(
                 children: model.summonerRecord.items.map((e) {
-                  if (e.isEmpty) {
-                    return const SizedBox(width: 24, height: 24,);
-                  } else {
-                    return CachedNetworkImage(
-                      width: 24,
-                      height: 24,
-                      fit: BoxFit.contain,
-                      imageUrl: e,
-                    );
-                  }
+                  final isLast = e == model.summonerRecord.items.last;
+                  final child = ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: AppCachedNetworkImage(url: e, size: 24,)
+                  );
+                  return isLast ? child : Row(
+                    children: [
+                      child,
+                      const SizedBox(width: 2,)
+                    ],
+                  );
                 }).toList(),
               )
             ],

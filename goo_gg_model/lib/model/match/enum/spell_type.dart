@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum SummonerSpell {
   flash(4, 'SummonerFlash'),
   heal(7, 'SummonerHeal'),
