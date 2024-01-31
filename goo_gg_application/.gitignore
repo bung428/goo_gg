@@ -42,4 +42,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-api_key.json
+assets/api_key.json
