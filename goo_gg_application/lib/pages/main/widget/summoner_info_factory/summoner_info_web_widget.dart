@@ -2,17 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
 import 'package:goo_gg_application/data/summoner/extension/summoner_entry.dart';
-import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
+import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summoner_info_iwidget.dart';
 import 'package:goo_gg_application/util/datetime_util.dart';
 import 'package:goo_gg_application/widget/asset_imge_widget.dart';
 import 'package:goo_gg_application/widget/touch_well.dart';
 import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
 
-class SummonerInfoWidget extends StatelessWidget {
-  final SummonerModel model;
-  final List<SummonerEntryModel>? entries;
-
-  const SummonerInfoWidget({super.key, required this.model, this.entries});
+class SummonerInfoWebWidget extends SummonerInfoIWidget {
+  const SummonerInfoWebWidget({
+    super.key,
+    super.entries,
+    super.refreshCallback,
+    required super.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class SummonerInfoWidget extends StatelessWidget {
                       children: [
                         if (state == RefreshState.possible) ...[
                           TouchWell(
-                              onTap: () {},
+                              onTap: refreshCallback,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(4)
                               ),
@@ -108,7 +110,6 @@ class SummonerInfoWidget extends StatelessWidget {
               Divider(height: 1, color: theme.scaffoldBackgroundColor,),
               const SizedBox(height: 24,),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: entries!.map((e) => Expanded(
                   flex: 1,
                   child: Row(
@@ -149,3 +150,4 @@ class SummonerInfoWidget extends StatelessWidget {
     );
   }
 }
+

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
-import 'package:goo_gg_application/data/model/match/game_detail_info_model.dart';
+import 'package:goo_gg_application/data/match/model/game_detail_info_model.dart';
 import 'package:goo_gg_application/main.dart';
 import 'package:goo_gg_application/widget/app_cached_network_image.dart';
 import 'package:goo_gg_application/widget/asset_imge_widget.dart';

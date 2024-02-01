@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goo_gg_application/data/model/match/game_analysis_model.dart';
+import 'package:goo_gg_application/data/match/model/game_analysis_model.dart';
 import 'package:goo_gg_application/widget/value_graph_widget.dart';
 
 class PlayerAnalysisWidget extends StatelessWidget {

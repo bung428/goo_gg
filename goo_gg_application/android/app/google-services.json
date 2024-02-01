@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1056043770352",
+    "project_id": "goo-gg-dev",
+    "storage_bucket": "goo-gg-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056043770352:android:160c75b884a0380a197d35",
+        "android_client_info": {
+          "package_name": "com.goo.goo_gg_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu2wJXbut8ky3g6CZnARCz6UTXEsyM6PI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

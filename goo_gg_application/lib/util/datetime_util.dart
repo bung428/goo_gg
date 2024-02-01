@@ -1,3 +1,5 @@
+import 'package:rxdart/rxdart.dart';
+
 class DateTimeUtil {
   bool isWithinRange(DateTime start, DateTime end) {
     final now = DateTime.now();
@@ -10,9 +12,20 @@ class DateTimeUtil {
     return (to.difference(from).inHours / 24).round();
   }
 
-  bool compareDateByMinutes(DateTime time, int gap) {
+  (bool, int) compareDateByMinutes(DateTime time, int gap) {
     final now = DateTime.now();
-    return time.difference(now).inMinutes >= gap ? true : false;
+    final days = now.difference(time).inDays;
+    final hours = now.difference(time).inHours;
+    final minutes = now.difference(time).inMinutes;
+
+    if (days > 0) {
+      return (true, -1);
+    } else if (hours > 0) {
+      return (true, -1);
+    } else {
+      final result = (minutes >= gap ? true : false, minutes - gap);
+      return result;
+    }
   }
 
   (RefreshState, String) calculateDaysDifference(DateTime target) {

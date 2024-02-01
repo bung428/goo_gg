@@ -1,5 +1,5 @@
 enum QueueType {
-  solo('RANKED_SOLO_5x5', '솔로'),
+  solo('RANKED_SOLO_5x5', '솔랭'),
   free('RANKED_FLEX_SR', '자랭'),
   ;
 

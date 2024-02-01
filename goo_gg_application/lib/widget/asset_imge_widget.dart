@@ -6,6 +6,7 @@ class AssetImageWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? bgColor;
+  final bool isPng;
   final BoxFit fit;
   final BoxShape shape;
   final BoxBorder? border;
@@ -22,6 +23,7 @@ class AssetImageWidget extends StatelessWidget {
     this.border,
     this.bgColor,
     this.padding,
+    this.isPng = true,
     this.fit = BoxFit.contain,
     this.shape = BoxShape.rectangle,
   });
@@ -40,7 +42,7 @@ class AssetImageWidget extends StatelessWidget {
           ),
           padding: padding,
           child: Image.asset(
-            'assets/images/$image.png',
+            'assets/images/$image${isPng ? '.png' : '.jpeg'}',
             width: _width,
             height: _height,
             fit: fit,

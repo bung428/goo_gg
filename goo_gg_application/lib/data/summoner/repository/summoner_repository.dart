@@ -92,6 +92,8 @@ class SummonerRepository extends RiverRepository {
         '$leagueApiUrl${SummonerRest.bySummoner.rest}/$id'
       );
       List list = response.data;
+      if (list.isEmpty) return null;
+
       List<SummonerEntryModel> result = list
           .map((e) => SummonerEntryModel.fromJson(e)).toList();
       if (result.first.type == QueueType.free) {
@@ -137,8 +139,8 @@ class SummonerRepository extends RiverRepository {
         )
       );
       return response.data;
-    } on DioException catch (e) {
+    } catch (e) {
       return null;
     }
-}
+  }
 }

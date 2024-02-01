@@ -59,6 +59,7 @@ class SummonerModel {
     'level': level,
   };
 
+  String get tagLine => '#$tag';
   String get levelStr => '${level.toInt()}';
   String get updateAt => DateFormat('yyyy.MM.dd').format(revisionDate);
 }

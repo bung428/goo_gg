@@ -1,14 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
-import 'package:goo_gg_application/data/model/match/match_history_model.dart';
+import 'package:goo_gg_application/data/match/model/match_history_model.dart';
 import 'package:goo_gg_application/main.dart';
 import 'package:goo_gg_application/widget/app_cached_network_image.dart';
 
-class SummarizedMatchHistoryWidget extends StatelessWidget {
+class MatchHistoryTitleWidget extends StatelessWidget {
   final SummarizedMatchModel model;
 
-  const SummarizedMatchHistoryWidget({super.key, required this.model});
+  const MatchHistoryTitleWidget({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {

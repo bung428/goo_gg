@@ -32,6 +32,7 @@ class MatchInfoModel with _$MatchInfoModel {
 extension MatchInfoModelExt on MatchInfoModel {
   GameType get gameTypeValue => switch (queueId) {
     420 => GameType.soloRank,
+    400 => GameType.normalDraft,
     430 => GameType.normal,
     440 => GameType.freeRank,
     450 => GameType.aram,
@@ -40,9 +41,15 @@ extension MatchInfoModelExt on MatchInfoModel {
 
   String get gameTime {
     final diff = gameEndTimestamp.difference(gameStartTimestamp);
+    final minStr = (diff.inMinutes % 60).toString();
+    final secStr = (diff.inSeconds % 60).toString();
+    final min = minStr.length == 1
+        ? '0$minStr' : minStr;
+    final sec = secStr.length == 1
+        ? '0$secStr' : secStr;
     return diff.inHours > 0
-        ? '${diff.inHours}시간 ${diff.inMinutes % 60}분'
-        : '${diff.inMinutes % 60}분 ${diff.inSeconds % 60}초';
+        ? '${diff.inHours}시간 $min분'
+        : '$min분 $sec초';
   }
 
   int get blueTotalKill {

@@ -1,10 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:goo_gg_application/data/match/enum/game_result.dart';
-import 'package:goo_gg_application/data/model/match/game_analysis_model.dart';
-import 'package:goo_gg_application/data/model/match/game_detail_info_model.dart';
-import 'package:goo_gg_application/data/model/match/game_info_model.dart';
-import 'package:goo_gg_application/data/model/match/summoner_record_model.dart';
+import 'package:goo_gg_application/data/match/model/game_analysis_model.dart';
+import 'package:goo_gg_application/data/match/model/game_detail_info_model.dart';
+import 'package:goo_gg_application/data/match/model/game_info_model.dart';
+import 'package:goo_gg_application/data/match/model/summoner_record_model.dart';
 import 'package:goo_gg_application/data/riot_data_cdn_url.dart';
 import 'package:goo_gg_model/model/match/match_info_model.dart';
 import 'package:goo_gg_model/model/match/participant_model.dart';

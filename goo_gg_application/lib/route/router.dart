@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goo_gg_application/pages/login/login_page.dart';
 import 'package:goo_gg_application/pages/main/main_page.dart';
+import 'package:goo_gg_application/pages/match_detail/match_detail_page.dart';
 import 'package:goo_gg_application/pages/splash/splash_page.dart';
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/service/app_service.dart';
@@ -43,6 +44,19 @@ final appRouters = GoRouter(
           pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: const LoginPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(
+                    opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                    child: child,
+                  )
+          ),
+        ),
+        GoRoute(
+          path: Routes.matchDetail.path,
+          name: Routes.matchDetail.name,
+          pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const MatchDetailPage(),
               transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                   FadeTransition(
                     opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
