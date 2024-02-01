@@ -1,4 +1,4 @@
-# goo_gg_application
+firebase_configure.sh# goo_gg_application
 
 A new Flutter project.
 
