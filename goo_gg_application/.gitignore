@@ -41,10 +41,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/gradle/
 /android/app/google-service.json
 
 /ios/firbase_app_id_file.json
 /ios/Runner/GoogleService-Info.plist
 
 firebase_configure.sh
+
 assets/api_key.json
+
+/lib/firebase_options.dart
