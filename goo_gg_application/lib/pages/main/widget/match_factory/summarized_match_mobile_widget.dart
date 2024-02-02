@@ -10,11 +10,9 @@ class SummarizedMatchMobileWidget extends SummarizedMatchIWidget {
 
   const SummarizedMatchMobileWidget({
     super.key,
-    required super.color,
-    required super.analysis,
-    required super.gameDetailInfo,
-    required super.summarized,
     required this.onTap,
+    required super.color,
+    required super.summarized,
   });
 
   @override

@@ -18,8 +18,8 @@ import 'package:rxdart/rxdart.dart';
 
 class HomeViewModel {
   final SummonerModel? summonerModel;
-  final List<SummonerEntryModel>? entries;
   final List<MatchHistoryModel>? matches;
+  final List<SummonerEntryModel>? entries;
 
   HomeViewModel({
     this.summonerModel,
@@ -58,7 +58,7 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
   }
 
   void refreshSummoner() {
-    print('KBG summonerName : $summonerName');
+
   }
 
   void requestInGame() {
@@ -127,14 +127,13 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     } else  {
       fetchSummonerDataBySearchTxt(name);
     }
-
     summonerName = name;
   }
 
   Future<List<MatchHistoryModel>> getShortMatches(
-      List<String>? matchIds,
-      String puuid
-      ) async {
+    List<String>? matchIds,
+    String puuid
+  ) async {
     if (matchIds == null || matchIds.isEmpty) return [];
     List<MatchHistoryModel> list = [];
     List<MatchInfoModel> infoList = [];
@@ -142,17 +141,6 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
       final result = await repository.getMatchesByMatchId(id);
       if (result != null) {
         infoList.add(result.info);
-        // final infoModel = result.info;
-        // // final image = await repository.getImageData(infoModel.c)
-        // list.add(MatchHistoryModel(
-        //   summarizedMatch: SummarizedMatchModel(
-        //     gameInfo: infoModel.getGameInfo(puuid),
-        //     summonerRecord: infoModel.getSummonerInfo(puuid),
-        //   ),
-        //   gameDetailInfo: infoModel.gameDetailInfo(),
-        //   gameAnalysis: infoModel.getGameAnalysis(),
-        //   expanded: false,
-        // ));
       }
     }
 
@@ -213,14 +201,11 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     List<SummonerEntryModel>? entries;
     List<MatchHistoryModel> shortMatches = [];
     if (summonerModel != null) {
-      entries =
-      await repository.getSummonerEntriesById(summonerModel.id);
+      entries = await repository.getSummonerEntriesById(summonerModel.id);
 
-      matchIds = await repository.getMatchListByPuuid(
-          summonerModel.puuid, startMatchId) ??
-          [];
-      shortMatches =
-      await getShortMatches(matchIds, summonerModel.puuid);
+      matchIds = await repository
+          .getMatchListByPuuid(summonerModel.puuid, startMatchId) ?? [];
+      shortMatches = await getShortMatches(matchIds, summonerModel.puuid);
     }
     return (summonerModel, entries, shortMatches);
   });

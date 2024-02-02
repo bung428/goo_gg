@@ -4,6 +4,14 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def versionProperties = new Properties()
+def versionPropertiesFile = rootProject.file('version.properties')
+if (versionPropertiesFile.exists()) {
+    versionPropertiesFile.withReader('UTF-8') { reader ->
+        versionProperties.load(reader)
+    }
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -22,9 +30,24 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def appCompileSdkVersion = versionProperties.getProperty('flutter.appCompileSdkVersion')
+if (appCompileSdkVersion == null) {
+    appCompileSdkVersion = '33'
+}
+
+def appMinSdkVersion = versionProperties.getProperty('flutter.appMinSdkVersion')
+if (appMinSdkVersion == null) {
+    appMinSdkVersion = '26'
+}
+
+def appTargetSdkVersion = versionProperties.getProperty('flutter.appTargetSdkVersion')
+if (appTargetSdkVersion == null) {
+    appTargetSdkVersion = '33'
+}
+
 android {
     namespace "com.goo.goo_gg_application"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion appCompileSdkVersion.toInteger()
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -45,8 +68,8 @@ android {
         applicationId "com.goo.goo_gg_application"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion appMinSdkVersion.toInteger()
+        targetSdkVersion appTargetSdkVersion.toInteger()
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

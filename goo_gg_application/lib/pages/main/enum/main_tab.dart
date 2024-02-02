@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goo_gg_application/pages/main/view/analytics_view.dart';
+import 'package:goo_gg_application/pages/main/view/lol_analytics_view.dart';
 import 'package:goo_gg_application/pages/main/view/home_view.dart';
 
 enum MainTab {
@@ -14,6 +14,6 @@ enum MainTab {
 extension MainTabExt on MainTab {
   Widget getView() => switch(this) {
     MainTab.home => const HomeView(),
-    MainTab.analytics => const AnalyticsView(),
+    MainTab.analytics => const LoLAnalyticsView(),
   };
 }

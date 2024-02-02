@@ -23,10 +23,10 @@ class MatchHistoryModel {
   });
 
   MatchHistoryModel copyWith({bool? expanded}) => MatchHistoryModel(
+    expanded: expanded ?? this.expanded,
     summarizedMatch: summarizedMatch,
     gameDetailInfo: gameDetailInfo,
     gameAnalysis: gameAnalysis,
-    expanded: expanded ?? this.expanded
   );
 }
 

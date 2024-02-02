@@ -5,15 +5,15 @@ import 'package:goo_gg_application/data/match/model/match_history_model.dart';
 
 abstract class SummarizedMatchIWidget extends StatelessWidget {
   final Color color;
-  final List<GameAnalysisModel> analysis;
-  final GameDetailInfoModel gameDetailInfo;
   final SummarizedMatchModel summarized;
+  final GameDetailInfoModel? gameDetailInfo;
+  final List<GameAnalysisModel>? analysis;
 
   const SummarizedMatchIWidget({
     super.key,
+    this.analysis,
+    this.gameDetailInfo,
     required this.color,
-    required this.analysis,
-    required this.gameDetailInfo,
     required this.summarized
   });
 }

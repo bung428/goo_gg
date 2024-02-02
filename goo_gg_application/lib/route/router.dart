@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goo_gg_application/data/match/model/match_history_model.dart';
 import 'package:goo_gg_application/pages/login/login_page.dart';
 import 'package:goo_gg_application/pages/main/main_page.dart';
 import 'package:goo_gg_application/pages/match_detail/match_detail_page.dart';
 import 'package:goo_gg_application/pages/splash/splash_page.dart';
+import 'package:goo_gg_application/pages/test/test_page.dart';
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/service/app_service.dart';
 
@@ -25,6 +27,19 @@ final appRouters = GoRouter(
           )
       ),
       routes: [
+        GoRoute(
+          path: Routes.test.path,
+          name: Routes.test.name,
+          pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: TestPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(
+                    opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                    child: child,
+                  )
+          ),
+        ),
         GoRoute(
           path: Routes.splash.path,
           name: Routes.splash.name,
@@ -56,7 +71,7 @@ final appRouters = GoRouter(
           name: Routes.matchDetail.name,
           pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: const MatchDetailPage(),
+              child: MatchDetailPage(model: state.extra as MatchHistoryModel),
               transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                   FadeTransition(
                     opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),

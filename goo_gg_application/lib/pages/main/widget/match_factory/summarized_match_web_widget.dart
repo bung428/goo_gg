@@ -15,6 +15,7 @@ class SummarizedMatchWebWidget extends SummarizedMatchIWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (gameDetailInfo == null || analysis == null) return const SizedBox();
     return Card(
       elevation: 2,
       color: color,
@@ -25,8 +26,8 @@ class SummarizedMatchWebWidget extends SummarizedMatchIWidget {
             height: 368,
             child: PageView(
               children: [
-                PlayerMatchDetailWidget(model: gameDetailInfo),
-                PlayerAnalysisWidget(list: analysis),
+                PlayerMatchDetailWidget(model: gameDetailInfo!),
+                PlayerAnalysisWidget(list: analysis!),
               ],
             ),
           )

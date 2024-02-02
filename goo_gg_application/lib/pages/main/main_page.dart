@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/river_pod/river_template.dart';
-import 'package:goo_gg_application/pages/main/data/main_tab.dart';
+import 'package:goo_gg_application/pages/main/enum/main_tab.dart';
 import 'package:goo_gg_application/pages/main/main_notifier.dart';
 import 'package:goo_gg_application/widget/animated_indexed_stack_widget.dart';
 

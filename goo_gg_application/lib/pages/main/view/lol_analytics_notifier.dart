@@ -1,11 +1,11 @@
 import 'package:flutter_base_template/river_pod/river_notifier.dart';
 
-class AnalyticsViewModel {
+class LoLAnalyticsViewModel {
 
 }
 
-class AnalyticsNotifier extends RiverNotifier<AnalyticsViewModel> {
-  AnalyticsNotifier(super.state);
+class LoLAnalyticsNotifier extends RiverNotifier<LoLAnalyticsViewModel> {
+  LoLAnalyticsNotifier(super.state);
 
   @override
   void onInit() {

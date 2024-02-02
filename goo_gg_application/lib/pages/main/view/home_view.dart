@@ -7,9 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
 import 'package:goo_gg_application/pages/main/view/home_notifier.dart';
 import 'package:goo_gg_application/pages/main/widget/match_factory/summarized_match_mobile_widget.dart';
-import 'package:goo_gg_application/pages/main/widget/match_factory/summarized_match_web_widget.dart';
 import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summoner_info_mobile_widget.dart';
-import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summoner_info_web_widget.dart';
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/widget/load_more_listview.dart';
 import 'package:goo_gg_application/widget/search_widget.dart';
@@ -26,6 +24,7 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
         scrollController: notifier.scrollController,
         sliverListWidget: SliverList(
           delegate: SliverChildListDelegate([
+            TextButton(onPressed: () => context.goNamed(Routes.test.name), child: Text('test')),
             const SizedBox(height: 8,),
             SearchWidget(
               hintText: '소환사 이름을 입력해주세요.',
@@ -36,13 +35,13 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
             ),
             if (provider.summonerModel != null) ...[
               const SizedBox(height: 16,),
-              if (kIsWeb)
-                SummonerInfoWebWidget(
-                  model: provider.summonerModel!,
-                  entries: provider.entries,
-                  refreshCallback: notifier.refreshSummoner,
-                )
-              else
+              // if (kIsWeb)
+              //   SummonerInfoWebWidget(
+              //     model: provider.summonerModel!,
+              //     entries: provider.entries,
+              //     refreshCallback: notifier.refreshSummoner,
+              //   )
+              // else
                 SummonerInfoMobileWidget(
                   model: provider.summonerModel!,
                   entries: provider.entries,
@@ -58,25 +57,30 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
                 itemCount: provider.matches!.length,
                 itemBuilder: (context, index) {
                   final summarized = provider.matches![index].summarizedMatch;
-                  final gameDetailInfo = provider.matches![index].gameDetailInfo;
-                  final analysis = provider.matches![index].gameAnalysis;
                   final gameResult = summarized.gameInfo.gameResult;
-                  return kIsWeb
-                    ? SummarizedMatchWebWidget(
-                      color: gameResult.color.withOpacity(0.25),
-                      summarized: summarized,
-                      gameDetailInfo: gameDetailInfo,
-                      analysis: analysis,
-                  ) : SummarizedMatchMobileWidget(
-                      color: gameResult.color,
-                      analysis: analysis,
-                      gameDetailInfo: gameDetailInfo,
-                      summarized: summarized,
-                      onTap: () => context.goNamed(
-                        Routes.matchDetail.name,
-
-                      ),
+                  // final gameDetailInfo = provider.matches![index].gameDetailInfo;
+                  // final analysis = provider.matches![index].gameAnalysis;
+                  return SummarizedMatchMobileWidget(
+                    color: gameResult.color,
+                    summarized: summarized,
+                    onTap: () => context.goNamed(
+                      Routes.matchDetail.name,
+                      extra: provider.matches![index]
+                    ),
                   );
+                  // return kIsWeb
+                  //   ? SummarizedMatchWebWidget(
+                  //     color: gameResult.color.withOpacity(0.25),
+                  //     summarized: summarized,
+                  //     gameDetailInfo: gameDetailInfo,
+                  //     analysis: analysis,
+                  // ) : SummarizedMatchMobileWidget(
+                  //     color: gameResult.color,
+                  //     analysis: analysis,
+                  //     gameDetailInfo: gameDetailInfo,
+                  //     summarized: summarized,
+                  //     onTap: () => context.goNamed(Routes.matchDetail.name),
+                  // );
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                   kIsWeb ? const SizedBox() : const Divider(height: 1,),

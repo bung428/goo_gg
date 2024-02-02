@@ -1,7 +1,8 @@
 enum Routes {
-  splash('splash', '/splash'),
-  login('login', '/login'),
   main('main', '/'),
+  test('test', '/test'),
+  login('login', '/login'),
+  splash('splash', '/splash'),
   matchDetail('matchDetail', '/matchDetail'),
   ;
 
