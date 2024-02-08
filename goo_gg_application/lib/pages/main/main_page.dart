@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_template/river_pod/river_template.dart';
 import 'package:goo_gg_application/pages/main/enum/main_tab.dart';
 import 'package:goo_gg_application/pages/main/main_notifier.dart';
-import 'package:goo_gg_application/widget/animated_indexed_stack_widget.dart';
 
 class MainPage extends RiverProvider<MainNotifier, int> {
   const MainPage({super.key});
@@ -19,10 +18,14 @@ class MainPage extends RiverProvider<MainNotifier, int> {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: AnimatedIndexedStackWidget(
-          index: provider,
+        child: PageView(
+          controller: notifier.pageController,
           children: MainTab.values.map((e) => e.getView()).toList(),
-        )
+        ),
+        // child: AnimatedIndexedStackWidget(
+        //   index: provider,
+        //   children: MainTab.values.map((e) => e.getView()).toList(),
+        // )
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: notifier.changeTab,

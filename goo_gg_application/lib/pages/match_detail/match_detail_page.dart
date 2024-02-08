@@ -26,7 +26,7 @@ class MatchDetailPage
     final summarized = model.summarizedMatch;
     final gameDetail = model.gameDetailInfo;
     final gameAnalysis = model.gameAnalysis;
-    final mainColor = summarized.gameInfo.gameResult.color;
+    final mainColor = summarized.gameInfo.gameResult?.color;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, value) => [
@@ -57,7 +57,7 @@ class MatchDetailPage
   SliverAppBar _buildAppBar(
     ThemeData theme,
     SummarizedMatchModel model,
-    Color mainColor
+    Color? mainColor
   ) => SliverAppBar(
     pinned: true,
     expandedHeight: 160,
@@ -66,7 +66,7 @@ class MatchDetailPage
     flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         title: Text(
-          model.gameInfo.gameResult.value,
+          model.gameInfo.gameResult?.value ?? '',
           style: theme.textTheme.titleMedium
               ?.copyWith(color: theme.scaffoldBackgroundColor),
         ),
@@ -94,7 +94,7 @@ class MatchDetailPage
     ThemeData theme,
     notifier,
     List<DetailTabModel> list,
-    Color color
+    Color? color
   ) {
     return Row(
       children: list.map((e) => Expanded(
@@ -108,7 +108,7 @@ class MatchDetailPage
             onTap: () => notifier.changeTab(e.tab),
             child: Container(
               height: 48,
-              color: e.selected ? color.withOpacity(0.2) : Colors.transparent,
+              color: e.selected ? color?.withOpacity(0.2) : Colors.transparent,
               child: Center(
                 child: Text(
                   e.tab.text,

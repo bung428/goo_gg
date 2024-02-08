@@ -7,7 +7,7 @@ class ApiRespModel<T> {
 
   ApiRespModel({this.model, this.errorMsg, required this.state});
 
-  factory ApiRespModel.fail(Exception e) => ApiRespModel(
+  factory ApiRespModel.fail(e) => ApiRespModel(
     state: ApiState.fail,
     errorMsg: e.toString()
   );

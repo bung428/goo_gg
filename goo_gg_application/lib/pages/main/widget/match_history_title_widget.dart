@@ -24,19 +24,20 @@ class MatchHistoryTitleWidget extends StatelessWidget {
               Text(
                 model.gameInfo.gameType.type,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: gameResult.color,
+                  color: gameResult?.color,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              if (model.gameInfo.finishedAtStr != null)
               Text(
-                model.gameInfo.finishedAtStr,
+                model.gameInfo.finishedAtStr!,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.disabledColor
                 ),
               ),
               const SizedBox(height: 12,),
               Text(
-                model.gameInfo.gameResult.value,
+                model.gameInfo.gameResult?.value ?? '',
                 style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.disabledColor
                 ),

@@ -1,65 +1,53 @@
-import 'package:goo_gg_model/model/summoner/account_model.dart';
-import 'package:goo_gg_model/model/summoner/summoner_account_model.dart';
+import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
+import 'package:goo_gg_model/util/timestamp_converter.dart';
 import 'package:intl/intl.dart';
 
 class SummonerModel {
   final String name;
-  final String tag;
+  final String tagLine;
   final String id;
   final String puuid;
   final String accountId;
-  final DateTime revisionDate;
+  final DateTime updatedAt;
   final String profileImg;
-  final double level;
+  final double summonerLevel;
 
   SummonerModel({
     required this.name,
-    required this.tag,
+    required this.tagLine,
     required this.id,
     required this.puuid,
     required this.accountId,
-    required this.revisionDate,
+    required this.updatedAt,
     required this.profileImg,
-    required this.level
+    required this.summonerLevel,
   });
 
-  factory SummonerModel.fromModel(
-    SummonerAccountModel model,
-    AccountModel accountModel
-  ) => SummonerModel(
-    name: model.name,
-    tag: accountModel.tagLine,
-    id: model.id,
-    puuid: model.puuid,
-    accountId: model.accountId,
-    revisionDate: model.revisionDate,
-    profileImg: model.profileImg,
-    level: model.summonerLevel
-  );
-
-  factory SummonerModel.fromJson(Map<String, dynamic> json) => SummonerModel(
-    name: json['name'],
-    tag: json['tag'],
-    id: json['id'],
-    puuid: json['puuid'],
-    accountId: json['accountId'],
-    revisionDate: DateTime.parse(json['revisionDate']),
-    profileImg: json['profileImg'],
-    level: json['level']
-  );
+  factory SummonerModel.fromJson(Map<String, dynamic> json) {
+    return SummonerModel(
+      name: json['name'],
+      tagLine: json['tagLine'],
+      id: json['id'],
+      puuid: json['puuid'],
+      accountId: json['accountId'],
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
+      profileImg: json['profileImg'],
+      summonerLevel: json['summonerLevel'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'name': name,
-    'tag': tag,
+    'tagLine': tagLine,
     'id': id,
     'puuid': puuid,
     'accountId': accountId,
-    'revisionDate': revisionDate.toString(),
+    'updatedAt': updatedAt.millisecondsSinceEpoch,
     'profileImg': profileImg,
-    'level': level,
+    'summonerLevel': summonerLevel,
   };
 
-  String get tagLine => '#$tag';
-  String get levelStr => '${level.toInt()}';
-  String get updateAt => DateFormat('yyyy.MM.dd').format(revisionDate);
+  String get tagSharp => '#$tagLine';
+  String get summonerLevelStr => '${summonerLevel.toInt()}';
+  String get updateAtForm => DateFormat('yyyy.MM.dd').format(updatedAt);
 }

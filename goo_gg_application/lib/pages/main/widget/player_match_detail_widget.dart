@@ -39,13 +39,13 @@ class PlayerMatchDetailWidget extends StatelessWidget {
       ),
       padding: const EdgeInsetsApp(horizontal: 18, vertical: 12),
       child: Column(
-        children: model.blueTeamInfo.map((e) {
-          final isLast = e == model.blueTeamInfo.last;
+        children: model.blueTeamInfo?.map((e) {
+          final isLast = e == model.blueTeamInfo?.last;
           return MatchPlayerDetailItemWidget(
             model: e,
             isLast: isLast,
           );
-        }).toList(),
+        }).toList() ?? [],
       ),
     );
   }
@@ -62,13 +62,13 @@ class PlayerMatchDetailWidget extends StatelessWidget {
       ),
       padding: const EdgeInsetsApp(horizontal: 18, vertical: 12),
       child: Column(
-        children: model.redTeamInfo.map((e) {
-          final isLast = e == model.redTeamInfo.last;
+        children: model.redTeamInfo?.map((e) {
+          final isLast = e == model.redTeamInfo?.last;
           return MatchPlayerDetailItemWidget(
             model: e,
             isLast: isLast,
           );
-        }).toList(),
+        }).toList() ?? [],
       ),
     );
   }
@@ -80,28 +80,28 @@ class PlayerMatchDetailWidget extends StatelessWidget {
       child: Row(
         children: [
           ObjectResultWidget(
-              baron: data.first.baron,
-              dragon: data.first.dragon,
-              horde: data.first.horde,
-              inhibitor: data.first.inhibitor,
-              riftHerald: data.first.riftHerald,
-              tower: data.first.tower
+              baron: data?.first.baron ?? 0,
+              dragon: data?.first.dragon ?? 0,
+              horde: data?.first.horde ?? 0,
+              inhibitor: data?.first.inhibitor ?? 0,
+              riftHerald: data?.first.riftHerald ?? 0,
+              tower: data?.first.tower ?? 0
           ),
           const SizedBox(width: 4,),
           Expanded(
             child: Column(
               children: [
                 TupleValueGraphWidget(
-                  firstValue: data.first.teamKills,
-                  lastValue: data.last.teamKills,
-                  isBlue: data.first.isBlue,
+                  firstValue: data?.first.teamKills ?? 0,
+                  lastValue: data?.last.teamKills ?? 0,
+                  isBlue: data?.first.isBlue ?? true,
                   title: 'Total Kill',
                 ),
                 const SizedBox(height: 4,),
                 TupleValueGraphWidget(
-                  firstValue: data.first.teamGolds,
-                  lastValue: data.last.teamGolds,
-                  isBlue: data.first.isBlue,
+                  firstValue: data?.first.teamGolds ?? 0,
+                  lastValue: data?.last.teamGolds ?? 0,
+                  isBlue: data?.first.isBlue ?? false,
                   title: 'Total Gold',
                 ),
               ],
@@ -109,12 +109,12 @@ class PlayerMatchDetailWidget extends StatelessWidget {
           ),
           const SizedBox(width: 4,),
           ObjectResultWidget(
-              baron: data.last.baron,
-              dragon: data.last.dragon,
-              horde: data.last.horde,
-              inhibitor: data.last.inhibitor,
-              riftHerald: data.last.riftHerald,
-              tower: data.last.tower
+              baron: data?.last.baron ?? 0,
+              dragon: data?.last.dragon ?? 0,
+              horde: data?.last.horde ?? 0,
+              inhibitor: data?.last.inhibitor ?? 0,
+              riftHerald: data?.last.riftHerald ?? 0,
+              tower: data?.last.tower ?? 0
           ),
         ],
       ),
@@ -146,7 +146,7 @@ class MatchPlayerDetailItemWidget extends StatelessWidget {
               ClipOval(
                 child: AppCachedNetworkImage(
                   size: 24,
-                  url: model.championUrl,
+                  url: model.championUrl ?? '',
                 ),
               ),
               Positioned(
@@ -201,7 +201,7 @@ class MatchPlayerDetailItemWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                model.grade,
+                model.grade ?? '',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.disabledColor,
                   fontSize: 8
@@ -213,7 +213,7 @@ class MatchPlayerDetailItemWidget extends StatelessWidget {
           Column(
             children: [
               Text(
-                '${model.totalCs.toString()} / ${model.totalCsPerMin.toStringAsFixed(2)}',
+                '${model.totalCs.toString()} / ${model.totalCsPerMin?.toStringAsFixed(2)}',
                 style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.disabledColor,
                     fontSize: 8
@@ -268,12 +268,12 @@ class ObjectResultWidget extends StatelessWidget {
 
   const ObjectResultWidget({
     super.key,
-    required this.baron,
-    required this.dragon,
-    required this.horde,
-    required this.inhibitor,
-    required this.riftHerald,
-    required this.tower
+    this.baron = 0,
+    this.dragon = 0,
+    this.horde = 0,
+    this.inhibitor = 0,
+    this.riftHerald = 0,
+    this.tower = 0,
   });
 
   @override

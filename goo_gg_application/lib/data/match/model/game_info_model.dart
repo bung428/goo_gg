@@ -5,8 +5,8 @@ import 'package:relative_time/relative_time.dart';
 
 class GameInfoModel {
   final GameType gameType;
-  final DateTime finishedAt;
-  final GameResult gameResult;
+  final DateTime? finishedAt;
+  final GameResult? gameResult;
   final String gameDuration;
 
   GameInfoModel({
@@ -23,5 +23,6 @@ class GameInfoModel {
     'gameDuration' : gameDuration,
   };
   
-  String get finishedAtStr => RelativeTime.locale(const Locale('ko')).format(finishedAt);
+  String? get finishedAtStr => finishedAt == null
+      ? null : RelativeTime.locale(const Locale('ko')).format(finishedAt!);
 }

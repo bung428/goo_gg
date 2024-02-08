@@ -19,10 +19,10 @@ class SummonerInfoWebWidget extends SummonerInfoIWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateInfo = DateTimeUtil().calculateDaysDifference(DateTime(2024, 1, 22));
+    final dateInfo = DateTimeUtil().calculateDaysDifference(model.updatedAt);
     final state = dateInfo.$1;
     final dateDesc = dateInfo.$2;
-    final updateAt = dateDesc == 'same' ? model.updateAt : dateDesc;
+    final updateAt = dateDesc == 'same' ? model.updatedAt : dateDesc;
     return Card(
       elevation: 2,
       child: Padding(
@@ -56,7 +56,7 @@ class SummonerInfoWebWidget extends SummonerInfoIWidget {
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsetsApp(all: 4),
                       child: Text(
-                        'Lv ${model.levelStr}',
+                        'Lv ${model.summonerLevelStr}',
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: theme.primaryColor),
                       ),
@@ -69,7 +69,7 @@ class SummonerInfoWebWidget extends SummonerInfoIWidget {
                           fontWeight: FontWeight.bold
                         ),),
                         const SizedBox(width: 4,),
-                        Text(model.tag, style: theme.textTheme.bodySmall?.copyWith(
+                        Text(model.tagLine, style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.normal,
                           color: theme.disabledColor
                         ),),

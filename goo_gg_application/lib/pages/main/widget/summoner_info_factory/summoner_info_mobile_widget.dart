@@ -10,11 +10,13 @@ import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
 class SummonerInfoMobileWidget extends SummonerInfoIWidget {
   final VoidCallback refreshMatchesCallback;
   final VoidCallback inGameCallback;
+  final String image;
 
   const SummonerInfoMobileWidget({
     super.key,
     super.entries,
     required super.model,
+    required this.image,
     required this.inGameCallback,
     required this.refreshMatchesCallback,
   });
@@ -22,15 +24,15 @@ class SummonerInfoMobileWidget extends SummonerInfoIWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-   return Column(
+    return Column(
      children: [
        Stack(
          children: [
            ClipRRect(
              borderRadius: BorderRadius.circular(24),
-             child: const AssetImageWidget(
+             child: AssetImageWidget(
                width: double.infinity,
-               image: 'ezreal',
+               image: image,
                isPng: false,
              ),
            ),
@@ -45,7 +47,7 @@ class SummonerInfoMobileWidget extends SummonerInfoIWidget {
                    children: [
                      SummonerProfileImgWidget(
                        url: model.profileImg,
-                       level: model.levelStr,
+                       level: model.summonerLevelStr,
                        position: LevelPosition.center,
                        imgSize: 88,
                        lvSize: 24,

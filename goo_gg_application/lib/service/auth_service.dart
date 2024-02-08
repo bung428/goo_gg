@@ -37,13 +37,13 @@ class AuthService {
     AppService.instance.isLogin = _user.value != null;
   }
 
-  Future<SummonerModel> setSummonerInfo(SummonerAccountModel model, AccountModel accountModel) async {
-    final result = SummonerModel.fromModel(model, accountModel);
-    _summoner.value = result;
-    return result;
+  Future<void> setSummonerInfo(SummonerModel model) async {
+    print('KBg model : ${model.toJson()}');
+    _summoner.value = model;
   }
 
   Future<void> setSummonerEntries(List<SummonerEntryModel> list) async {
+    print('KBg list : $list');
     _summonerEntries.value = list;
   }
 }

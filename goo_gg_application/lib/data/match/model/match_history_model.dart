@@ -43,68 +43,70 @@ class SummarizedMatchModel {
 
 extension MatchInfoModelExt on MatchInfoModel {
   GameInfoModel getGameInfo(String puuid) {
-    final userTeamId = participants.firstWhere((p) => p.puuid == puuid).teamId;
-    final win = teams.firstWhere((t) => t.teamId == userTeamId).win;
+    final userTeamId = participants?.firstWhere((p) => p.puuid == puuid).teamId;
+    final win = teams?.firstWhere((t) => t.teamId == userTeamId).win;
     return GameInfoModel(
       gameType: gameTypeValue,
       finishedAt: gameEndTimestamp,
-      gameResult: win ? GameResult.win : GameResult.lose,
+      gameResult: win != null
+          ? win ? GameResult.win : GameResult.lose
+          : null,
       gameDuration: gameTime,
     );
   }
 
   SummonerRecordModel getSummonerInfo(String puuid) {
-    final user = participants.firstWhere((p) => p.puuid == puuid);
+    final user = participants?.firstWhere((p) => p.puuid == puuid);
     return SummonerRecordModel(
-      championUrl: DataCdnUrl.getChampionIconUrl(user.championName),
-      championLevel: user.champLevel,
+      championUrl: DataCdnUrl.getChampionIconUrl(user?.championName),
+      championLevel: user?.champLevel ?? 0,
       spells: [
-        DataCdnUrl.getSpellIconUrl(user.spellD?.spellName),
-        DataCdnUrl.getSpellIconUrl(user.spellF?.spellName)
+        DataCdnUrl.getSpellIconUrl(user?.spellD?.spellName),
+        DataCdnUrl.getSpellIconUrl(user?.spellF?.spellName)
       ],
       runes: [
-        DataCdnUrl.getRuneIconUrl(user.mainRune?.url),
-        DataCdnUrl.getRuneIconUrl(user.subRune?.url),
+        DataCdnUrl.getRuneIconUrl(user?.mainRune?.url),
+        DataCdnUrl.getRuneIconUrl(user?.subRune?.url),
       ],
-      kill: user.kills,
-      death: user.deaths,
-      assist: user.assists,
-      grade: user.grade,
+      kill: user?.kills ?? 0,
+      death: user?.deaths ?? 0,
+      assist: user?.assists ?? 0,
+      grade: user?.grade ?? 0,
       items: [
-        DataCdnUrl.getItemIconUrl(user.item0.toString()),
-        DataCdnUrl.getItemIconUrl(user.item1.toString()),
-        DataCdnUrl.getItemIconUrl(user.item2.toString()),
-        DataCdnUrl.getItemIconUrl(user.item3.toString()),
-        DataCdnUrl.getItemIconUrl(user.item4.toString()),
-        DataCdnUrl.getItemIconUrl(user.item5.toString()),
-        DataCdnUrl.getItemIconUrl(user.item6.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item0.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item1.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item2.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item3.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item4.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item5.toString()),
+        DataCdnUrl.getItemIconUrl(user?.item6.toString()),
       ]
     );
   }
 
   GameDetailInfoModel gameDetailInfo() {
-    final blueTeam = participants.sublist(0, 5);
-    final redTeam = participants.sublist(5);
-    final isBlue = teams.firstWhere((t) => t.teamId == blueTeam.first.teamId);
+    final blueTeam = participants?.sublist(0, 5);
+    final redTeam = participants?.sublist(5);
+    final isBlue = teams?.firstWhere((t) => t.teamId == blueTeam?.first.teamId);
     final blueGold = blueTeam
-        .map((e) => e.goldEarned)
-        .fold(0, (sum, value) => sum + value);
+        ?.map((e) => e.goldEarned)
+        .fold(0, (sum, value) => sum + (value ?? 0));
     final redGold = blueTeam
-        .map((e) => e.goldEarned)
-        .fold(0, (sum, value) => sum + value);
+        ?.map((e) => e.goldEarned)
+        .fold(0, (sum, value) => sum + (value ?? 0));
     return GameDetailInfoModel(
-      redTeamInfo: redTeam.map((e) {
+      redTeamInfo: redTeam?.map((e) {
         return PlayerInfoModel(
           nickName: e.summonerName,
           championUrl: DataCdnUrl.getChampionIconUrl(e.championName),
           championLevel: e.champLevel,
           kda: '${e.kills}/${e.deaths}/${e.assists}',
-          grade: double.parse('${(e.kills + e.assists) / e.deaths}').toStringAsFixed(2),
+          grade: e.grade.toStringAsFixed(2),
           gold: e.goldEarned,
-          killInvolvement: (e.kills + e.assists) / redTotalKill,
-          totalCs: e.totalMinionsKilled + e.neutralMinionsKilled,
-          totalCsPerMin: (e.totalMinionsKilled + e.neutralMinionsKilled) 
-              / (gameDuration ~/ 60),
+          killInvolvement: ((e.kills ?? 0) + (e.assists ?? 0)) / redTotalKill,
+          totalCs: (e.totalMinionsKilled ?? 0) + (e.neutralMinionsKilled ?? 0),
+          totalCsPerMin: ((e.totalMinionsKilled ?? 0) + (e.neutralMinionsKilled ?? 0))
+              / ((gameDuration ?? 0) ~/ 60),
           spells: [
             DataCdnUrl.getSpellIconUrl(e.spellD?.spellName),
             DataCdnUrl.getSpellIconUrl(e.spellF?.spellName)
@@ -124,18 +126,18 @@ extension MatchInfoModelExt on MatchInfoModel {
             ]
         );
       }).toList(),
-      blueTeamInfo: blueTeam.map((e) {
+      blueTeamInfo: blueTeam?.map((e) {
         return PlayerInfoModel(
             nickName: e.summonerName,
             championUrl: DataCdnUrl.getChampionIconUrl(e.championName),
             championLevel: e.champLevel,
             kda: '${e.kills}/${e.deaths}/${e.assists}',
-            grade: double.parse('${(e.kills + e.assists) / e.deaths}').toStringAsFixed(2),
+            grade: e.grade.toStringAsFixed(2),
             gold: e.goldEarned,
-            killInvolvement: (e.kills + e.assists) / blueTotalKill,
-            totalCs: e.totalMinionsKilled + e.neutralMinionsKilled,
-            totalCsPerMin: (e.totalMinionsKilled + e.neutralMinionsKilled)
-                / (gameDuration ~/ 60),
+            killInvolvement: (e.kills ?? 0 + (e.assists ?? 0)) / blueTotalKill,
+            totalCs: (e.totalMinionsKilled ?? 0) + (e.neutralMinionsKilled ?? 0),
+            totalCsPerMin: ((e.totalMinionsKilled ?? 0)+ (e.neutralMinionsKilled ?? 0))
+                / ((gameDuration ?? 0) ~/ 60),
             spells: [
               DataCdnUrl.getSpellIconUrl(e.spellD?.spellName),
               DataCdnUrl.getSpellIconUrl(e.spellF?.spellName)
@@ -155,40 +157,41 @@ extension MatchInfoModelExt on MatchInfoModel {
             ]
         );
       }).toList(),
-      teamObjectInfo: teams.map((e) => TeamObjectInfoModel(
+      teamObjectInfo: teams?.map((e) => TeamObjectInfoModel(
         isBlue: e == isBlue,
         win: e.win,
-        teamGolds: e.teamId == blueTeam.first.teamId ? blueGold : redGold,
-        teamKills: e.objectives.champion.kills,
-        teamDeaths: e == isBlue 
-          ? blueTeam.map((e) => e.deaths).fold(0, (sum, value) => sum + value)
-          : redTeam.map((e) => e.deaths).fold(0, (sum, value) => sum + value),
-        teamAssists: e == isBlue
-          ? blueTeam.map((e) => e.assists).fold(0, (sum, value) => sum + value)
-          : redTeam.map((e) => e.assists).fold(0, (sum, value) => sum + value),
-        baron: e.objectives.baron.kills,
-        dragon: e.objectives.dragon.kills,
-        horde: e.objectives.horde.kills,
-        inhibitor: e.objectives.inhibitor.kills,
-        riftHerald: e.objectives.riftHerald.kills,
-        tower: e.objectives.tower.kills
+        teamGolds: (e.teamId == blueTeam?.first.teamId ? blueGold : redGold) ?? 0,
+        teamKills: (e.objectives?.champion?.kills) ?? 0,
+        teamDeaths: (e == isBlue
+          ? blueTeam?.map((e) => e.deaths).fold(0, (sum, value) => sum ?? 0 + (value ?? 0))
+          : redTeam?.map((e) => e.deaths).fold(0, (sum, value) => sum ?? 0 + (value ?? 0))) ?? 0,
+        teamAssists: (e == isBlue
+          ? blueTeam?.map((e) => e.assists).fold(0, (sum, value) => sum ?? 0 + (value ?? 0))
+          : redTeam?.map((e) => e.assists).fold(0, (sum, value) => sum ?? 0 + (value ?? 0))) ?? 0,
+        baron: e.objectives?.baron?.kills ?? 0,
+        dragon: e.objectives?.dragon?.kills ?? 0,
+        horde: e.objectives?.horde?.kills ?? 0,
+        inhibitor: e.objectives?.inhibitor?.kills ?? 0,
+        riftHerald: e.objectives?.riftHerald?.kills ?? 0,
+        tower: e.objectives?.tower?.kills ?? 0
       )).toList()
     );
   }
 
   List<GameAnalysisModel> getGameAnalysis(List<ui.Image?> images) {
-    return participants.map((e) {
-      final idx = participants.indexOf(e);
+    if (participants == null) return [];
+    return participants!.map((e) {
+      final idx = participants!.indexOf(e);
       final url = images[idx];
       return GameAnalysisModel(
           champIconData: url,
-          totalDamage: e.damageSelfMitigated,
-          totalDamageTaken: e.totalDamageTaken,
-          damageToChampion: e.totalDamageDealtToChampions,
-          gold: e.goldEarned,
-          turret: e.turretKills,
-          visionScore: e.visionScore,
-          bountyLevel: e.bountyLevel
+          totalDamage: e.damageSelfMitigated ?? 0,
+          totalDamageTaken: e.totalDamageTaken ?? 0,
+          damageToChampion: e.totalDamageDealtToChampions ?? 0,
+          gold: e.goldEarned ?? 0,
+          turret: e.turretKills ?? 0,
+          visionScore: e.visionScore ?? 0,
+          bountyLevel: e.bountyLevel ?? 0
       );
     }).toList();
   }

@@ -3,9 +3,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class GameDetailInfoModel {
-  final List<PlayerInfoModel> redTeamInfo;
-  final List<PlayerInfoModel> blueTeamInfo;
-  final List<TeamObjectInfoModel> teamObjectInfo;
+  final List<PlayerInfoModel>? redTeamInfo;
+  final List<PlayerInfoModel>? blueTeamInfo;
+  final List<TeamObjectInfoModel>? teamObjectInfo;
 
   GameDetailInfoModel({
     required this.redTeamInfo,
@@ -14,7 +14,7 @@ class GameDetailInfoModel {
   });
 
   bool get isWinBlue =>
-      teamObjectInfo.firstWhereOrNull((e) => e.isBlue && e.win) == null
+      teamObjectInfo?.firstWhereOrNull((e) => e.isBlue && (e.win ?? false)) == null
           ? false
           : true;
 
@@ -25,7 +25,7 @@ class GameDetailInfoModel {
 
 class TeamObjectInfoModel {
   final bool isBlue;
-  final bool win;
+  final bool? win;
   final int teamGolds;
   final int teamKills;
   final int teamDeaths;
@@ -54,18 +54,18 @@ class TeamObjectInfoModel {
 }
 
 class PlayerInfoModel {
-  final String nickName;
-  final String championUrl;
-  final int championLevel;
+  final String? nickName;
+  final String? championUrl;
+  final int? championLevel;
   final List<String> spells;
   final List<String> runes;
-  final String kda;
-  final String grade;
-  final double killInvolvement;
+  final String? kda;
+  final String? grade;
+  final double? killInvolvement;
   final List<String> items;
-  final int totalCs;
-  final int gold;
-  final double totalCsPerMin;
+  final int? totalCs;
+  final int? gold;
+  final double? totalCsPerMin;
 
   PlayerInfoModel({
     required this.nickName,
@@ -82,5 +82,5 @@ class PlayerInfoModel {
     required this.totalCsPerMin,
   });
 
-  String get killInvolvementStr => '${(killInvolvement * 100).floor()}%';
+  String get killInvolvementStr => '${((killInvolvement ?? 0) * 100).floor()}%';
 }

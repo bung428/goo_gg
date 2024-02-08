@@ -12,6 +12,8 @@ import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/widget/load_more_listview.dart';
 import 'package:goo_gg_application/widget/search_widget.dart';
 
+import '../../../widget/asset_imge_widget.dart';
+
 class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
   const HomeView({super.key});
 
@@ -24,7 +26,7 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
         scrollController: notifier.scrollController,
         sliverListWidget: SliverList(
           delegate: SliverChildListDelegate([
-            TextButton(onPressed: () => context.goNamed(Routes.test.name), child: Text('test')),
+            TextButton(onPressed: notifier.test, child: Text('test')),
             const SizedBox(height: 8,),
             SearchWidget(
               hintText: '소환사 이름을 입력해주세요.',
@@ -44,7 +46,7 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
               // else
                 SummonerInfoMobileWidget(
                   model: provider.summonerModel!,
-                  entries: provider.entries,
+                  image: notifier.getBgImage(),
                   inGameCallback: notifier.requestInGame,
                   refreshMatchesCallback: notifier.refreshSummoner,
                 )
@@ -61,7 +63,7 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
                   // final gameDetailInfo = provider.matches![index].gameDetailInfo;
                   // final analysis = provider.matches![index].gameAnalysis;
                   return SummarizedMatchMobileWidget(
-                    color: gameResult.color,
+                    color: gameResult?.color ?? Colors.transparent,
                     summarized: summarized,
                     onTap: () => context.goNamed(
                       Routes.matchDetail.name,

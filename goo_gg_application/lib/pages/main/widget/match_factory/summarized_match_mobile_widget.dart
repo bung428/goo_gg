@@ -37,7 +37,7 @@ class SummarizedMatchMobileWidget extends SummarizedMatchIWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        summarized.gameInfo.gameResult.value,
+                        summarized.gameInfo.gameResult?.value ?? '',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.scaffoldBackgroundColor
                         ),
@@ -158,14 +158,12 @@ class SummarizedMatchMobileWidget extends SummarizedMatchIWidget {
                   ],
                 ),
               ),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(summarized.gameInfo.gameType.type),
-                    Text(summarized.gameInfo.finishedAtStr,),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(summarized.gameInfo.gameType.type),
+                  Text(summarized.gameInfo.finishedAtStr ?? '',),
+                ],
               )
             ],
           ),
