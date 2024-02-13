@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
 import 'package:goo_gg_application/data/summoner/extension/summoner_entry.dart';
 import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summoner_info_iwidget.dart';
 import 'package:goo_gg_application/pages/main/widget/summoner_profile_img_widget.dart';
 import 'package:goo_gg_application/widget/asset_imge_widget.dart';
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 
 class SummonerInfoMobileWidget extends SummonerInfoIWidget {
   final VoidCallback refreshMatchesCallback;

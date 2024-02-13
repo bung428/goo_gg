@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/match_info_model.dart';
-import 'package:goo_gg_model/model/match/meta_data_model.dart';
+import 'match_info_model.dart';
+import 'meta_data_model.dart';
 
 // part 'match_model.freezed.dart';
 // part 'match_model.g.dart';
@@ -16,12 +15,14 @@ import 'package:goo_gg_model/model/match/meta_data_model.dart';
 // }
 
 class MatchModel {
+  late String matchId;
   MetadataModel? metadata;
   MatchInfoModel? info;
 
-  MatchModel({this.metadata, this.info});
+  MatchModel({required this.matchId, this.metadata, this.info});
 
   MatchModel.fromJson(Map<String, dynamic> json) {
+    matchId = json['matchId'];
     metadata = json['metadata'] != null
         ? MetadataModel.fromJson(json['metadata']) : null;
     info = json['info'] != null
@@ -36,6 +37,7 @@ class MatchModel {
     if (info != null) {
       data['info'] = info!.toJson();
     }
+    data['matchId'] = matchId;
     return data;
   }
 }

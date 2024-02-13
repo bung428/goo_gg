@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goo_gg_application/data/match/enum/game_result.dart';
-import 'package:goo_gg_model/model/match/enum/game_type.dart';
+import 'package:goo_gg_model/model/riot/match/enum/game_type.dart';
 import 'package:relative_time/relative_time.dart';
 
 class GameInfoModel {

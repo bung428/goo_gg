@@ -12,6 +12,12 @@ class DateTimeUtil {
     return (to.difference(from).inHours / 24).round();
   }
 
+  bool calculateDayDifference(DateTime target) {
+    final now = DateTime.now();
+    final diff = now.difference(target);
+    return diff.inDays > 0;
+  }
+
   (bool, int) compareDateByMinutes(DateTime time, int gap) {
     final now = DateTime.now();
     final days = now.difference(time).inDays;

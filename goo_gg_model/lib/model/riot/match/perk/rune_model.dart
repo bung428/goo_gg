@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/perk/perk_style_model.dart';
-import 'package:goo_gg_model/model/match/perk/stat_perks_model.dart';
+import 'package:goo_gg_model/model/riot/match/perk/perk_style_model.dart';
+import 'package:goo_gg_model/model/riot/match/perk/stat_perks_model.dart';
 
 // part 'rune_model.freezed.dart';
 // part 'rune_model.g.dart';

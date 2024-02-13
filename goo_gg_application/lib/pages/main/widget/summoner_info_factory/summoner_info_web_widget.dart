@@ -6,7 +6,7 @@ import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summo
 import 'package:goo_gg_application/util/datetime_util.dart';
 import 'package:goo_gg_application/widget/asset_imge_widget.dart';
 import 'package:goo_gg_application/widget/touch_well.dart';
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 
 class SummonerInfoWebWidget extends SummonerInfoIWidget {
   const SummonerInfoWebWidget({

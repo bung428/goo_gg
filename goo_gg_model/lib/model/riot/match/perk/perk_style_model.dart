@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/perk/perk_info_model.dart';
 import 'package:collection/collection.dart';
+import 'package:goo_gg_model/model/riot/match/perk/perk_info_model.dart';
 
 // part 'perk_style_model.freezed.dart';
 // part 'perk_style_model.g.dart';

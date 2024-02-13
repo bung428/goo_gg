@@ -1,4 +1,4 @@
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 
 const assetUrl = 'assets/images/';
 extension SummonerEntryModelExt on SummonerEntryModel {

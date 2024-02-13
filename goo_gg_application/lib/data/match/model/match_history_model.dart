@@ -6,8 +6,8 @@ import 'package:goo_gg_application/data/match/model/game_detail_info_model.dart'
 import 'package:goo_gg_application/data/match/model/game_info_model.dart';
 import 'package:goo_gg_application/data/match/model/summoner_record_model.dart';
 import 'package:goo_gg_application/data/riot_data_cdn_url.dart';
-import 'package:goo_gg_model/model/match/match_info_model.dart';
-import 'package:goo_gg_model/model/match/participant_model.dart';
+import 'package:goo_gg_model/model/riot/match/match_info_model.dart';
+import 'package:goo_gg_model/model/riot/match/participant_model.dart';
 
 class MatchHistoryModel {
   final bool expanded;

@@ -1,8 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/enum/game_type.dart';
-import 'package:goo_gg_model/model/match/participant_model.dart';
-import 'package:goo_gg_model/model/match/team_record_model.dart';
-import 'package:goo_gg_model/util/json_converter.dart';
+import 'enum/game_type.dart';
+import 'participant_model.dart';
+import 'team_record_model.dart';
 
 // part 'match_info_model.freezed.dart';
 // part 'match_info_model.g.dart';

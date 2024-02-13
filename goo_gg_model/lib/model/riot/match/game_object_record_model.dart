@@ -1,5 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/game_object_model.dart';
+import 'game_object_model.dart';
 
 // part 'game_object_record_model.freezed.dart';
 // part 'game_object_record_model.g.dart';

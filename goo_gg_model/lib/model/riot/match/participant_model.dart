@@ -1,128 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/challenge_model.dart';
-import 'package:goo_gg_model/model/match/enum/rune_type.dart';
-import 'package:goo_gg_model/model/match/enum/spell_type.dart';
-import 'package:goo_gg_model/model/match/mission_model.dart';
-import 'package:goo_gg_model/model/match/perk/rune_model.dart';
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
+import 'package:goo_gg_model/model/riot/match/enum/rune_type.dart';
+import 'package:goo_gg_model/model/riot/match/enum/spell_type.dart';
+import 'package:goo_gg_model/model/riot/match/perk/rune_model.dart';
 
-// part 'participant_model.freezed.dart';
-// part 'participant_model.g.dart';
-//
-// @freezed
-// class ParticipantModel with _$ParticipantModel {
-//   factory ParticipantModel({
-//     required int assists,
-//     required int baronKills,
-//     required int bountyLevel, /// 현상금 수준
-//     required int champExperience,
-//     required int champLevel,
-//     required int championId,
-//     required String championName,
-//     required int championTransform,
-//     required int consumablesPurchased,
-//     required int damageDealtToBuildings,
-//     required int damageDealtToObjectives,
-//     required int damageDealtToTurrets,
-//     required int damageSelfMitigated, /// 총 딜량
-//     required int deaths,
-//     required int detectorWardsPlaced,
-//     required int doubleKills,
-//     required int dragonKills,
-//     required bool firstBloodAssist,
-//     required bool firstBloodKill,
-//     required bool firstTowerAssist,
-//     required bool firstTowerKill,
-//     required bool gameEndedInEarlySurrender,
-//     required bool gameEndedInSurrender,
-//     required int goldEarned, /// 골드 획득
-//     required int goldSpent,
-//     required String individualPosition,
-//     required int inhibitorKills,
-//     required int inhibitorTakedowns,
-//     required int inhibitorsLost,
-//     required int item0,
-//     required int item1,
-//     required int item2,
-//     required int item3,
-//     required int item4,
-//     required int item5,
-//     required int item6,
-//     required int itemsPurchased,
-//     required int killingSprees,
-//     required int kills,
-//     required String lane,
-//     required int largestCriticalStrike,
-//     required int largestKillingSpree,
-//     required int largestMultiKill,
-//     required int longestTimeSpentLiving,
-//     required int magicDamageDealt,
-//     required int magicDamageDealtToChampions,
-//     required int magicDamageTaken,
-//     Map missions
-//     required int neutralMinionsKilled,
-//     required int nexusKills,
-//     required int nexusTakedowns,
-//     required int nexusLost,
-//     required int objectivesStolen,
-//     required int objectivesStolenAssists,
-//     required int participantId,
-//     required int pentaKills,
-//     required RuneModel perks,
-//     required int physicalDamageDealt,
-//     required int physicalDamageDealtToChampions,
-//     required int physicalDamageTaken,
-//     required int profileIcon,
-//     required String puuid,
-//     required int quadraKills,
-//     required String riotIdGameName,
-//     required String riotIdTagline,
-//     required String role,
-//     required int sightWardsBoughtInGame,
-//     required int spell1Casts,
-//     required int spell2Casts,
-//     required int spell3Casts,
-//     required int spell4Casts,
-//     required int summoner1Casts,
-//     required int summoner1Id,
-//     required int summoner2Casts,
-//     required int summoner2Id,
-//     required String summonerId,
-//     required String summonerName,
-//     required int summonerLevel,
-//     required bool teamEarlySurrendered,
-//     required int teamId,
-//     required String teamPosition,
-//     required int timeCCingOthers,
-//     required int timePlayed,
-//     required int totalDamageDealt,
-//     required int totalDamageDealtToChampions, /// 챔피언에게 가한 피해량
-//     required int totalDamageShieldedOnTeammates,
-//     required int totalDamageTaken, /// 총 받은 피해량
-//     required int totalHeal,
-//     required int totalHealsOnTeammates,
-//     required int totalMinionsKilled,
-//     required int totalTimeCCDealt,
-//     required int totalTimeSpentDead,
-//     required int totalUnitsHealed,
-//     required int tripleKills,
-//     required int trueDamageDealt,
-//     required int trueDamageDealtToChampions,
-//     required int trueDamageTaken,
-//     required int turretKills, /// 포탑 제거
-//     required int turretTakedowns,
-//     required int turretsLost,
-//     required int unrealKills,
-//     required int visionScore, /// 시야점수
-//     required int visionWardsBoughtInGame, /// 제어와드
-//     required int wardsKilled,
-//     required int wardsPlaced, /// 와드 설치
-//     required bool win,
-//   }) = _ParticipantModel;
-//
-//   factory ParticipantModel.fromJson(Map<String, dynamic> json) => _$ParticipantModelFromJson(json);
-// }
+import 'challenge_model.dart';
+import 'mission_model.dart';
 
 class ParticipantModel {
   int? allInPings;
@@ -131,7 +14,6 @@ class ParticipantModel {
   int? baronKills;
   int? basicPings;
   int? bountyLevel;
-  ChallengeModel? challenges;
   int? champExperience;
   int? champLevel;
   int? championId;
@@ -268,14 +150,13 @@ class ParticipantModel {
   int? wardsPlaced;
   bool? win;
 
-  ParticipantModel({
-    this.allInPings,
+  ParticipantModel(
+      {this.allInPings,
         this.assistMePings,
         this.assists,
         this.baronKills,
         this.basicPings,
         this.bountyLevel,
-        this.challenges,
         this.champExperience,
         this.champLevel,
         this.championId,
@@ -419,9 +300,6 @@ class ParticipantModel {
     baronKills = json['baronKills'];
     basicPings = json['basicPings'];
     bountyLevel = json['bountyLevel'];
-    challenges = json['challenges'] != null
-        ? ChallengeModel.fromJson(json['challenges'])
-        : null;
     champExperience = json['champExperience'];
     champLevel = json['champLevel'];
     championId = json['championId'];
@@ -474,7 +352,7 @@ class ParticipantModel {
     magicDamageDealtToChampions = json['magicDamageDealtToChampions'];
     magicDamageTaken = json['magicDamageTaken'];
     missions = json['missions'] != null
-        ? MissionModel.fromJson(json['missions'])
+        ? new MissionModel.fromJson(json['missions'])
         : null;
     needVisionPings = json['needVisionPings'];
     neutralMinionsKilled = json['neutralMinionsKilled'];
@@ -486,7 +364,7 @@ class ParticipantModel {
     onMyWayPings = json['onMyWayPings'];
     participantId = json['participantId'];
     pentaKills = json['pentaKills'];
-    perks = json['perks'] != null ? RuneModel.fromJson(json['perks']) : null;
+    perks = json['perks'] != null ? new RuneModel.fromJson(json['perks']) : null;
     physicalDamageDealt = json['physicalDamageDealt'];
     physicalDamageDealtToChampions = json['physicalDamageDealtToChampions'];
     physicalDamageTaken = json['physicalDamageTaken'];
@@ -569,9 +447,6 @@ class ParticipantModel {
     data['baronKills'] = this.baronKills;
     data['basicPings'] = this.basicPings;
     data['bountyLevel'] = this.bountyLevel;
-    if (this.challenges != null) {
-      data['challenges'] = this.challenges!.toJson();
-    }
     data['champExperience'] = this.champExperience;
     data['champLevel'] = this.champLevel;
     data['championId'] = this.championId;

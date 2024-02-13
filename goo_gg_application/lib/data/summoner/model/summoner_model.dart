@@ -1,5 +1,4 @@
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
-import 'package:goo_gg_model/util/timestamp_converter.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 import 'package:intl/intl.dart';
 
 class SummonerModel {
@@ -11,6 +10,7 @@ class SummonerModel {
   final DateTime updatedAt;
   final String profileImg;
   final double summonerLevel;
+  final List<SummonerEntryModel>? entries;
 
   SummonerModel({
     required this.name,
@@ -21,9 +21,11 @@ class SummonerModel {
     required this.updatedAt,
     required this.profileImg,
     required this.summonerLevel,
+    this.entries,
   });
 
   factory SummonerModel.fromJson(Map<String, dynamic> json) {
+    List? list = json['entries'];
     return SummonerModel(
       name: json['name'],
       tagLine: json['tagLine'],
@@ -33,6 +35,7 @@ class SummonerModel {
       updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       profileImg: json['profileImg'],
       summonerLevel: json['summonerLevel'],
+      entries: list?.map((e) => SummonerEntryModel.fromJson(e)).toList()
     );
   }
 
@@ -45,6 +48,7 @@ class SummonerModel {
     'updatedAt': updatedAt.millisecondsSinceEpoch,
     'profileImg': profileImg,
     'summonerLevel': summonerLevel,
+    'entries': entries?.map((e) => e.toJson()).toList()
   };
 
   String get tagSharp => '#$tagLine';

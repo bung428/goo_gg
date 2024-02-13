@@ -19,6 +19,7 @@ async function saveSummonerInfo(summonerData, accountData, entries) {
         'accountId': summonerData.accountId,
         'profileImg': summonerData.profileImg,
         'summonerLevel': summonerData.summonerLevel,
+        'entries': entries,
         'updatedAt': Date.now(),
     };
     try {

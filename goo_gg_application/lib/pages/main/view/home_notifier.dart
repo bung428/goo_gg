@@ -1,34 +1,31 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_base_template/edge_insets.dart';
+import 'package:flutter_base_template/river_pod/river_template.dart';
 import 'package:flutter_base_template/stream_subscription.dart';
 import 'package:goo_gg_application/data/match/model/match_history_model.dart';
 import 'package:goo_gg_application/data/riot_data_cdn_url.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
-import 'package:goo_gg_application/service/auth_service.dart';
-import 'package:goo_gg_application/util/datetime_util.dart';
+import 'package:goo_gg_application/service/firebase/firestore_service.dart';
 import 'package:goo_gg_application/widget/dialog/app_bottom_sheet.dart';
 import 'package:goo_gg_application/widget/dialog/app_dialog.dart';
-import 'package:goo_gg_model/model/match/match_info_model.dart';
-import 'package:goo_gg_model/model/match/match_model.dart';
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
-import 'package:flutter_base_template/river_pod/river_template.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:goo_gg_model/model/riot/match/match_info_model.dart';
+import 'package:goo_gg_model/model/riot/match/match_model.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeViewModel {
   final SummonerModel? summonerModel;
+  final List<String>? matchIds;
   final List<MatchHistoryModel>? matches;
   final List<SummonerEntryModel>? entries;
 
   HomeViewModel({
     this.summonerModel,
+    this.matchIds,
     this.matches,
     this.entries,
   });
@@ -38,10 +35,12 @@ class HomeViewModel {
 
   HomeViewModel copyWith({
     SummonerModel? summonerModel,
+    List<String>? matchIds,
     List<SummonerEntryModel>? entries,
     List<MatchHistoryModel>? matches,
   }) => HomeViewModel(
     summonerModel: summonerModel ?? this.summonerModel,
+    matchIds: matchIds ?? this.matchIds,
     matches: matches ?? this.matches,
     entries: entries ?? this.entries,
   );
@@ -86,23 +85,29 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
   }
   
   void test() async {
-    final matchIds = [
-      "KR_6930313169",
-      "KR_6930274134",
-    ];
-    final data = await FirebaseFirestore.instance
-        .collection('summoners')
-        .doc('HB2IT8tczz5EjIWV0yEbjVVkuyImTtOoFU0dMSUJPgYb5g')
-        .collection('matches')
-        .where('matchId', whereIn: matchIds)
+    final query = await FirestoreService.instance
+        .collection(StoreCollection.summoners)
+        .where('name', isEqualTo: '석춧가루')
         .get();
-    print('KBG docs : ${data.docs.length}');
-    for (final doc in data.docs) {
-      print('KBG doc : ${doc.data()['metadata']}');
-    }
+    final model = SummonerModel.fromJson(query.docs.first.data());
+    print('KBG model : ${model.toJson()}');
+    // final matchIds = [
+    //   "KR_6930313169",
+    //   "KR_6930274134",
+    // ];
+    // final data = await FirebaseFirestore.instance
+    //     .collection('summoners')
+    //     .doc('HB2IT8tczz5EjIWV0yEbjVVkuyImTtOoFU0dMSUJPgYb5g')
+    //     .collection('matches')
+    //     .where('matchId', whereIn: matchIds)
+    //     .get();
+    // print('KBG docs : ${data.docs.length}');
+    // for (final doc in data.docs) {
+    //   print('KBG doc : ${doc.data()['metadata']}');
+    // }
   }
 
-  String getBgImage() {
+  String _getBgImage() {
     final random = Random();
     final randomIndex = random.nextInt(imagePaths.length);
     return imagePaths[randomIndex];
@@ -132,6 +137,7 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
       onShowLoading: () => showLoadingDialog(context),
       onHideLoading: () => hideLoadingDialog(context),
       onData: (_) async {
+        summonerName = _getBgImage();
         state = state.copyWith(
           summonerModel: _?.$1,
           entries: _?.$2,
@@ -144,58 +150,59 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
       });
   }
   
-  void getMatchHistories() {
+  void getMatchHistories() async {
     final context = buildContext;
     if (context == null) return;
-    
+
     final puuid = state.puuid;
     final id = state.id;
     if (puuid == null || id == null) return;
-    
-    streamSubscription<List<MatchModel>?>(
-      stream: Stream.fromFuture(repository.getMatchIds(puuid, startMatchId))
+
+    streamSubscription<List<MatchHistoryModel>?>(
+      stream: Stream.fromFuture(repository.initMatchIdProcess(id, puuid, startMatchId))
         .flatMap((value) {
-          print('KBG value : $value');
           if (value == null) {
             return const Stream.empty();
           } else {
-            /// todo: firestore에서 matchId 저장된것들 비교해서 없는 id list 추출.
-            /// 있는 id들은 firestore에서 받아오고 없는 id들은 서버에서 가져오고 저장하기.
-            return Stream.fromFuture(repository.getMatchesByIds(id, value));
+            state = state.copyWith(matchIds: value);
+            return Stream.fromFuture(repository.initMatchesProcess(id, value))
+                .flatMap((value) => Stream.fromFuture(getShortMatches(value, puuid)));
           }
       }),
       onShowLoading: () => showLoadingDialog(context),
       onHideLoading: () => hideLoadingDialog(context),
       onData: (_) async {
-        final matches = await getShortMatches(_, puuid);
-        state = state.copyWith(matches: matches);
+        _?.sort((a, b) {
+          final aUpdatedAt = a.summarizedMatch.gameInfo.finishedAt;
+          final bUpdatedAt = b.summarizedMatch.gameInfo.finishedAt;
+          if (aUpdatedAt == null && bUpdatedAt == null) {
+            return 0;
+          } else if (aUpdatedAt == null) {
+            return 1;
+          } else if (bUpdatedAt == null) {
+            return -1;
+          } else {
+            return bUpdatedAt.compareTo(aUpdatedAt);
+          }
+        });
+        state = state.copyWith(matches: _);
       }
     );
   }
 
-  void changeMatchExpansion(int index, bool isExpanded) {
-    List<MatchHistoryModel>? list = state.matches;
-    if (list == null || list.isEmpty) return;
-
-    list[index] = list[index].copyWith(expanded: isExpanded);
-    state = state.copyWith(matches: list);
-  }
+  // void changeMatchExpansion(int index, bool isExpanded) {
+  //   List<MatchHistoryModel>? list = state.matches;
+  //   if (list == null || list.isEmpty) return;
+  //
+  //   list[index] = list[index].copyWith(expanded: isExpanded);
+  //   state = state.copyWith(matches: list);
+  // }
 
   Future<void> searchSummoner(String name) async {
     final context = buildContext;
     if (context == null) return;
     /// todo: 타이머로 한번 누르고 3분뒤에 다시 누를수 있게
     getSummonerDataBySearchTxt(name);
-    //   final isTenMinOver = DateTimeUtil().compareDateByMinutes(model.updatedAt, 10);
-    //     // ignore: use_build_context_synchronously
-    //     showAppBottomSheet(
-    //         context: context,
-    //         content: (context) =>
-    //             Padding(
-    //               padding: const EdgeInsetsApp(horizontal: 16, vertical: 24),
-    //               child: Text('${isTenMinOver.$2}분 뒤에 다시 갱신 가능합니다.'),
-    //             )
-    //     );
   }
 
   Future<List<MatchHistoryModel>> getShortMatches(
@@ -234,44 +241,44 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
   }
 
   Future<void> loadMoreMatches() async {
-    // final context = buildContext;
-    // if (context == null) return;
-    // if (matchIds.isEmpty) return;
-    //
-    // final puuid = state.puuid;
-    // if (puuid == null) return;
+    final context = buildContext;
+    if (context == null) return;
 
-    // streamSubscription<List<MatchHistoryModel>>(
-    //     stream: Rx.fromCallable(() async {
-    //       startMatchId += matchIds.length;
-    //       List<String> currentMatchIds = await repository
-    //           .getMatchListByPuuid(puuid, startMatchId) ?? [];
-    //       matchIds = [...matchIds, ...currentMatchIds];
-    //       return await getShortMatches(currentMatchIds, puuid);
-    //     }),
-    //     onShowLoading: () => showLoadingDialog(context),
-    //     onHideLoading: () => hideLoadingDialog(context),
-    //     onData: (_) {
-    //       var matches = state.matches;
-    //       state = state.copyWith(matches: [...matches ?? [], ..._]);
-    //     }
-    // );
+    final id = state.id;
+    final puuid = state.puuid;
+    if (puuid == null || id == null) return;
+    List<String>? currentMatchIds = state.matchIds;
+    if (currentMatchIds == null || currentMatchIds.isEmpty) return;
+
+    startMatchId += currentMatchIds.length;
+
+    streamSubscription<List<MatchHistoryModel>>(
+      stream: Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
+        .flatMap((value) => Stream.fromFuture(repository.initMatchesProcess(id, value))
+          .flatMap((value) => Stream.fromFuture(getShortMatches(value, puuid)))),
+      onShowLoading: () => showLoadingDialog(context),
+      onHideLoading: () => hideLoadingDialog(context),
+      onData: (_) {
+        summonerName = _getBgImage();
+
+        var matches = state.matches ?? [];
+        matches.addAll(_);
+        matches.toSet().toList();
+        matches.sort((a, b) {
+          final aUpdatedAt = a.summarizedMatch.gameInfo.finishedAt;
+          final bUpdatedAt = b.summarizedMatch.gameInfo.finishedAt;
+          if (aUpdatedAt == null && bUpdatedAt == null) {
+            return 0;
+          } else if (aUpdatedAt == null) {
+            return 1;
+          } else if (bUpdatedAt == null) {
+            return -1;
+          } else {
+            return bUpdatedAt.compareTo(aUpdatedAt);
+          }
+        });
+        state = state.copyWith(matches: matches);
+      }
+    );
   }
-
-  // Stream<(SummonerModel?, List<SummonerEntryModel>?, List<MatchHistoryModel>)>
-  // getSummonerInfo(String name) => Rx.fromCallable(() async {
-  //   final summoner = await repository.getSummonersByName(name);
-  //   final summonerModel = summoner.model;
-  //
-  //   List<SummonerEntryModel>? entries;
-  //   List<MatchHistoryModel> shortMatches = [];
-  //   if (summonerModel != null) {
-  //     entries = await repository.getSummonerEntriesById(summonerModel.id);
-  //
-  //     matchIds = await repository
-  //         .getMatchListByPuuid(summonerModel.puuid, startMatchId) ?? [];
-  //     shortMatches = await getShortMatches(matchIds, summonerModel.puuid);
-  //   }
-  //   return (summonerModel, entries, shortMatches);
-  // });
 }

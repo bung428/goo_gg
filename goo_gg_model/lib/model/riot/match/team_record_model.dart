@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/match/ban_model.dart';
-import 'package:goo_gg_model/model/match/game_object_record_model.dart';
+import 'package:goo_gg_model/model/riot/match/ban_model.dart';
+import 'package:goo_gg_model/model/riot/match/game_object_record_model.dart';
 
 // part 'team_record_model.freezed.dart';
 // part 'team_record_model.g.dart';

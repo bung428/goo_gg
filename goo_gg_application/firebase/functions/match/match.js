@@ -10,7 +10,7 @@ const app = axios.create();
  */
 async function fetchMatchIdsByPuuid(apiKey, puuid, start) {
     const endDate = Date();
-    const apiUrl = 'https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/' + puuid + '/ids?endTiem=' + endDate + '&start=' + start + '&count=10';
+    const apiUrl = 'https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/' + puuid + '/ids?endTiem=' + endDate + '&start=' + start + '&count=7';
     const response = await app.get(apiUrl, {
         headers: {
             'X-Riot-Token': apiKey,

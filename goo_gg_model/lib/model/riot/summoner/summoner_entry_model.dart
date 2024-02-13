@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goo_gg_model/model/summoner/enum/queue_type.dart';
+import 'package:goo_gg_model/model/riot/summoner/enum/queue_type.dart';
 
 part 'summoner_entry_model.freezed.dart';
 part 'summoner_entry_model.g.dart';

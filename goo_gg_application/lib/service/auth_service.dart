@@ -2,9 +2,7 @@ import 'package:goo_gg_application/data/login/user_model.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/helper/preferences_helper.dart';
 import 'package:goo_gg_application/service/app_service.dart';
-import 'package:goo_gg_model/model/summoner/account_model.dart';
-import 'package:goo_gg_model/model/summoner/summoner_account_model.dart';
-import 'package:goo_gg_model/model/summoner/summoner_entry_model.dart';
+import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
