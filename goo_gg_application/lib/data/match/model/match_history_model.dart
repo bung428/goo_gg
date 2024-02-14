@@ -31,10 +31,12 @@ class MatchHistoryModel {
 }
 
 class SummarizedMatchModel {
+  final String summonerName;
   final GameInfoModel gameInfo;
   final SummonerRecordModel summonerRecord;
 
   SummarizedMatchModel({
+    required this.summonerName,
     required this.gameInfo,
     required this.summonerRecord
   });
@@ -52,6 +54,7 @@ extension MatchInfoModelExt on MatchInfoModel {
           ? win ? GameResult.win : GameResult.lose
           : null,
       gameDuration: gameTime,
+      gameMode: gameMode,
     );
   }
 
@@ -97,10 +100,10 @@ extension MatchInfoModelExt on MatchInfoModel {
     return GameDetailInfoModel(
       redTeamInfo: redTeam?.map((e) {
         return PlayerInfoModel(
-          nickName: e.summonerName,
+          nickName: '${e.riotIdGameName} #${e.riotIdTagline}',
           championUrl: DataCdnUrl.getChampionIconUrl(e.championName),
           championLevel: e.champLevel,
-          kda: '${e.kills}/${e.deaths}/${e.assists}',
+          kda: '${e.kills} / ${e.deaths} / ${e.assists}',
           grade: e.grade.toStringAsFixed(2),
           gold: e.goldEarned,
           killInvolvement: ((e.kills ?? 0) + (e.assists ?? 0)) / redTotalKill,
@@ -128,7 +131,7 @@ extension MatchInfoModelExt on MatchInfoModel {
       }).toList(),
       blueTeamInfo: blueTeam?.map((e) {
         return PlayerInfoModel(
-            nickName: e.summonerName,
+            nickName: '${e.riotIdGameName} #${e.riotIdTagline}',
             championUrl: DataCdnUrl.getChampionIconUrl(e.championName),
             championLevel: e.champLevel,
             kda: '${e.kills}/${e.deaths}/${e.assists}',

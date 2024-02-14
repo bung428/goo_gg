@@ -46,7 +46,7 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
               // else
                 SummonerInfoMobileWidget(
                   model: provider.summonerModel!,
-                  image: notifier.summonerName,
+                  image: notifier.selectedImg,
                   inGameCallback: notifier.requestInGame,
                   refreshMatchesCallback: notifier.refreshSummoner,
                 )

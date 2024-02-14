@@ -8,12 +8,14 @@ class GameInfoModel {
   final DateTime? finishedAt;
   final GameResult? gameResult;
   final String gameDuration;
+  final String? gameMode;
 
   GameInfoModel({
     required this.gameType,
     required this.finishedAt,
     required this.gameResult,
-    required this.gameDuration
+    required this.gameDuration,
+    required this.gameMode
   });
 
   Map<String, dynamic> toJson() => {
@@ -21,6 +23,7 @@ class GameInfoModel {
     'finishedAt' : finishedAt,
     'gameResult' : gameResult,
     'gameDuration' : gameDuration,
+    'gameMode' : gameMode,
   };
   
   String? get finishedAtStr => finishedAt == null

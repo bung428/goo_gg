@@ -28,35 +28,77 @@ class MatchDetailPage
     final gameAnalysis = model.gameAnalysis;
     final mainColor = summarized.gameInfo.gameResult?.color;
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, value) => [
+      body: CustomScrollView(
+        slivers: [
           _buildAppBar(theme, summarized, mainColor),
           if (provider.tabs?.isNotEmpty == true)
             SliverPersistentHeader(
               pinned: true,
-              // floating: true,
               delegate: _SliverAppBarDelegate(
                 minHeight: 66,
                 maxHeight: 66,
                 child: _buildTabBar(theme, notifier, provider.tabs!, mainColor),
               ),
             ),
+          SliverToBoxAdapter(
+            child: provider.tabs!.firstWhere((e) => e.selected).tab == DetailTab.total
+                ? TotalView(summarized: summarized, gameDetail: gameDetail)
+                : Container(),
+          )
+          // SliverList(
+          //   delegate: SliverChildBuilderDelegate((context, index) {
+          //     return PageView.builder(
+          //       controller: notifier.pageController,
+          //       itemCount: DetailTab.values.length,
+          //       itemBuilder: (context, index) {
+          //         final item = DetailTab.values[index].getView(summarized, gameDetail);
+          //         return item;
+          //       },
+          //     );
+          //   }),
+          // ),
+          // SliverFillRemaining(
+          //   hasScrollBody: false,
+          //   child: PageView.builder(
+          //     controller: notifier.pageController,
+          //     itemCount: DetailTab.values.length,
+          //     itemBuilder: (context, index) {
+          //       final item = DetailTab.values[index].getView(summarized, gameDetail);
+          //       return item;
+          //     },
+          //   ),
+          // ),
         ],
-        body: PageView.builder(
-          controller: notifier.pageController,
-          itemCount: DetailTab.values.length,
-          itemBuilder: (context, index) {
-            final item = DetailTab.values[index].getView(gameDetail);
-            return item;
-          },
-        )
       )
+      // body: NestedScrollView(
+      //   headerSliverBuilder: (context, value) => [
+      //     _buildAppBar(theme, summarized, mainColor),
+      //     if (provider.tabs?.isNotEmpty == true)
+      //       SliverPersistentHeader(
+      //         pinned: true,
+      //         // floating: true,
+      //         delegate: _SliverAppBarDelegate(
+      //           minHeight: 66,
+      //           maxHeight: 66,
+      //           child: _buildTabBar(theme, notifier, provider.tabs!, mainColor),
+      //         ),
+      //       ),
+      //   ],
+      //   body: PageView.builder(
+      //     controller: notifier.pageController,
+      //     itemCount: DetailTab.values.length,
+      //     itemBuilder: (context, index) {
+      //       final item = DetailTab.values[index].getView(gameDetail);
+      //       return item;
+      //     },
+      //   )
+      // )
     );
   }
 
   SliverAppBar _buildAppBar(
     ThemeData theme,
-    SummarizedMatchModel model,
+    SummarizedMatchModel summarized,
     Color? mainColor
   ) => SliverAppBar(
     pinned: true,
@@ -66,7 +108,7 @@ class MatchDetailPage
     flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         title: Text(
-          model.gameInfo.gameResult?.value ?? '',
+          summarized.gameInfo.gameResult?.value ?? '',
           style: theme.textTheme.titleMedium
               ?.copyWith(color: theme.scaffoldBackgroundColor),
         ),
@@ -78,7 +120,7 @@ class MatchDetailPage
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '${model.gameInfo.gameType.type} | ${model.gameInfo.finishedAtStr} | ${model.gameInfo.gameDuration}',
+                  '${summarized.gameInfo.gameType.type} | ${summarized.gameInfo.finishedAtStr} | ${summarized.gameInfo.gameDuration}',
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.scaffoldBackgroundColor),
                 ),

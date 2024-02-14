@@ -18,8 +18,6 @@ class MatchDetailViewModel {
 class MatchDetailNotifier extends RiverNotifier<MatchDetailViewModel> {
   MatchDetailNotifier(super.state);
 
-  final pageController = PageController();
-
   @override
   void onInit() {
     state = state.copyWith(
@@ -37,12 +35,12 @@ class MatchDetailNotifier extends RiverNotifier<MatchDetailViewModel> {
       tabModel.selected = (tabModel.tab == tab);
     }
 
-    final selected = list.firstWhere((e) => e.selected);
-    pageController.animateToPage(
-      DetailTab.values.indexOf(selected.tab),
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeIn
-    );
+    // final selected = list.firstWhere((e) => e.selected);
+    // pageController.animateToPage(
+    //   DetailTab.values.indexOf(selected.tab),
+    //   duration: const Duration(milliseconds: 300),
+    //   curve: Curves.easeIn
+    // );
 
     state = state.copyWith(tabs: list);
   }

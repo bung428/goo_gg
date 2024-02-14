@@ -11,7 +11,6 @@ import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 class SummonerInfoWebWidget extends SummonerInfoIWidget {
   const SummonerInfoWebWidget({
     super.key,
-    super.entries,
     super.refreshCallback,
     required super.model,
   });
@@ -20,6 +19,7 @@ class SummonerInfoWebWidget extends SummonerInfoIWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateInfo = DateTimeUtil().calculateDaysDifference(model.updatedAt);
+    final entries = model.entries;
     final state = dateInfo.$1;
     final dateDesc = dateInfo.$2;
     final updateAt = dateDesc == 'same' ? model.updatedAt : dateDesc;

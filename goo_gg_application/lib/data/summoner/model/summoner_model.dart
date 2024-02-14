@@ -9,8 +9,8 @@ class SummonerModel {
   final String accountId;
   final DateTime updatedAt;
   final String profileImg;
-  final double summonerLevel;
-  final List<SummonerEntryModel>? entries;
+  final num summonerLevel;
+  List<SummonerEntryModel>? entries;
 
   SummonerModel({
     required this.name,
@@ -25,7 +25,9 @@ class SummonerModel {
   });
 
   factory SummonerModel.fromJson(Map<String, dynamic> json) {
-    List? list = json['entries'];
+    final data = json['data'];
+    final entries = json['entries'];
+    List? list = entries;
     return SummonerModel(
       name: json['name'],
       tagLine: json['tagLine'],

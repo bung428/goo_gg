@@ -13,7 +13,6 @@ class SummonerInfoMobileWidget extends SummonerInfoIWidget {
 
   const SummonerInfoMobileWidget({
     super.key,
-    super.entries,
     required super.model,
     required this.image,
     required this.inGameCallback,
@@ -23,6 +22,7 @@ class SummonerInfoMobileWidget extends SummonerInfoIWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final entries = model.entries;
     return Column(
      children: [
        Stack(
@@ -117,18 +117,30 @@ class SummonerInfoMobileWidget extends SummonerInfoIWidget {
                      Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
-                         Text(entries!.first.type.title, style: theme.textTheme.bodyMedium?.copyWith(
-                           color: theme.primaryColorDark,
-                         ),),
-                         Text('${entries!.first.tier} ${entries!.first.rank}', style: theme.textTheme.bodyLarge?.copyWith(
+                         Text(
+                           entries.first.type.title,
+                           style: theme.textTheme.bodyMedium?.copyWith(
+                             color: theme.primaryColorDark,
+                           ),
+                         ),
+                         Text(
+                           '${entries.first.tier} ${entries.first.rank}',
+                           style: theme.textTheme.bodyLarge?.copyWith(
                              fontWeight: FontWeight.bold
-                         ),),
-                         Text('${entries!.first.leaguePoints.toString()} LP', style: theme.textTheme.bodySmall?.copyWith(
+                           ),
+                         ),
+                         Text(
+                           '${entries.first.leaguePoints.toString()} LP',
+                           style: theme.textTheme.bodySmall?.copyWith(
                              color: theme.disabledColor
-                         ),),
-                         Text('${entries!.first.wins}승 ${entries!.first.losses}패 (${entries!.first.winPercent}%)', style: theme.textTheme.bodySmall?.copyWith(
+                           ),
+                         ),
+                         Text(
+                           '${entries.first.wins}승 ${entries.first.losses}패 (${entries.first.winPercent}%)',
+                           style: theme.textTheme.bodySmall?.copyWith(
                              color: theme.disabledColor
-                         ),),
+                           ),
+                         ),
                        ],
                      )
                    ],

@@ -29,43 +29,43 @@ class SummonerRepository extends RiotRepository {
   @override
   RiverRepository createRiverRepo() => SummonerRepository();
 
-  Future<(SummonerModel?, List<SummonerEntryModel>?)?> getSummonerByName(String name) async {
+  Future<SummonerModel?> initSummonerProcess(
+    String name
+  ) async {
+    try {
+      final query = await FirestoreService.instance
+          .collection(StoreCollection.summoners)
+          .where('name', isEqualTo: name)
+          .get();
+      if (query.size > 0) {
+        /// todo: firstore에 저장된 정보라면 하루차이 확인 후 업데이트 할지 말지 프로세스.
+        final model = SummonerModel.fromJson(query.docs.first.data());
+        final isUpdate = DateTimeUtil().calculateDayDifference(model.updatedAt);
+        if (isUpdate) {
+          return await getSummonerByName(name);
+        } else {
+          return model;
+        }
+      } else {
+        return await getSummonerByName(name);
+      }
+    } catch (_) {
+      print('KBG summoner error : $_');
+      return null;
+    }
+  }
+
+  Future<SummonerModel?> getSummonerByName(String name) async {
     try {
       final response = await dio.post(
           '$baseUrl/summonerInfo', data: {'name': name});
-      List list = response.data['entries'];
-      final summoner = SummonerModel.fromJson(response.data['data']);
-      final entries = list.map((e) => SummonerEntryModel.fromJson(e))
-          .toList();
+      SummonerModel summoner = SummonerModel.fromJson(response.data);
       await AuthService.instance.setSummonerInfo(summoner);
-      await AuthService.instance.setSummonerEntries(entries);
-      return (summoner, entries);
+      return summoner;
     } catch (_) {
       print('KBG error : $_');
       return null;
     }
-    // final query = await FirestoreService.instance
-    //     .collection(StoreCollection.summoners)
-    //     .where('name', isEqualTo: name)
-    //     .get();
-    // if (query.size > 0) {
-    //   /// todo: firstore에 저장된 정보라면 하루차이 확인 후 업데이트 할지 말지 프로세스.
-    //   // final model = SummonerModel
-    // } else {
-    //   try {
-    //     final response = await dio.post(
-    //         '$baseUrl/summonerInfo', data: {'name': name});
-    //     List list = response.data['entries'];
-    //     final summoner = SummonerModel.fromJson(response.data['data']);
-    //     final entries = list.map((e) => SummonerEntryModel.fromJson(e))
-    //         .toList();
-    //     await AuthService.instance.setSummonerInfo(summoner);
-    //     await AuthService.instance.setSummonerEntries(entries);
-    //     return (summoner, entries);
-    //   } catch (_) {
-    //     return null;
-    //   }
-    // }
   }
 
   Future<List<String>?> initMatchIdProcess(
@@ -81,17 +81,7 @@ class SummonerRepository extends RiotRepository {
       if (isUpdate) {
         final matchIds = await getMatchIds(id, puuid, start);
         if (matchIds == null) return null;
-        List<String> saved = matchIdModel.matchIds;
-        saved.addAll(matchIds);
-        saved = saved.toSet().toList();
-        matchIdModel = matchIdModel.copyWith(
-          matchIds: saved
-        );
-        await FirestoreService.instance.writeInDoc(
-          id,
-          StoreCollection.matchIds,
-          matchIdModel.toJson()
-        );
+        final saved = await addMatchIdsInFirestore(matchIds, id);
         return saved;
       } else {
         return matchIdModel.matchIds;
@@ -110,9 +100,10 @@ class SummonerRepository extends RiotRepository {
     return null;
   }
 
-  Future<void> addMatchIdsInFirestore(List<String>? matchIds, String id) async {
-    if (matchIds == null || matchIds.isEmpty) return;
+  Future<List<String>?> addMatchIdsInFirestore(List<String>? matchIds, String id) async {
+    if (matchIds == null || matchIds.isEmpty) return null;
     try {
+      List<String>? result = matchIds;
       final doc = FirestoreService.instance
           .collection(StoreCollection.matchIds)
           .doc(id);
@@ -120,10 +111,10 @@ class SummonerRepository extends RiotRepository {
       final oldData = snapshot.data();
       if (snapshot.exists && oldData != null) {
         final model = MatchIdModel.fromJson(oldData);
-        var list = [...model.matchIds, ...matchIds];
-        list = list.toSet().toList();
+        result = [...model.matchIds, ...matchIds];
+        result = result.toSet().toList();
         await doc.update({
-          'matchIds': list.toSet().toList(),
+          'matchIds': result,
           'updatedAt': DateTime.now()
         });
       } else {
@@ -132,8 +123,10 @@ class SummonerRepository extends RiotRepository {
           'updatedAt': DateTime.now()
         });
       }
+      return result;
     } catch (e) {
       print('KBG error : $e');
+      return null;
     }
   }
 
@@ -146,8 +139,8 @@ class SummonerRepository extends RiotRepository {
       final response = await dio.post('$baseUrl/matchIds', data: data);
       final List list = response.data;
       final result = list.map((e) => e.toString()).toList();
-      await addMatchIdsInFirestore(result, id);
-      return result;
+      final resultIds = await addMatchIdsInFirestore(result, id);
+      return resultIds;
     } catch (e) {
       return null;
     }
@@ -155,6 +148,7 @@ class SummonerRepository extends RiotRepository {
 
   Future<List<MatchModel>?> initMatchesProcess(String id, List<String>? ids) async {
     if (ids == null || ids.isEmpty) return null;
+    print('KBG getMatches : ids : ${ids.length}');
     final saved = await getMatchIdsByFirestore(id);
     if (saved != null) {
       final nonOverlapIds = ids.where((id) => !saved.contains(id)).toList();
@@ -163,6 +157,8 @@ class SummonerRepository extends RiotRepository {
           ? await getMatchesByIds(id, nonOverlapIds)
           : [];
       final matchesByFirestore = await getMatchesByIdsInFirestore(id, overlapsIds);
+      final test = [...matchesByFirestore ?? [], ...?matchesByRiot];
+      print('KBG getMatches : ids : end : ${test.length}');
       return [...matchesByFirestore ?? [], ...?matchesByRiot];
     }
     return await getMatchesByIds(id, ids);

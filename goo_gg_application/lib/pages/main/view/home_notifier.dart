@@ -21,13 +21,11 @@ class HomeViewModel {
   final SummonerModel? summonerModel;
   final List<String>? matchIds;
   final List<MatchHistoryModel>? matches;
-  final List<SummonerEntryModel>? entries;
 
   HomeViewModel({
     this.summonerModel,
     this.matchIds,
     this.matches,
-    this.entries,
   });
 
   String? get id => summonerModel?.id;
@@ -42,7 +40,6 @@ class HomeViewModel {
     summonerModel: summonerModel ?? this.summonerModel,
     matchIds: matchIds ?? this.matchIds,
     matches: matches ?? this.matches,
-    entries: entries ?? this.entries,
   );
 }
 
@@ -56,6 +53,7 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
 
   int startMatchId = 0;
   String summonerName = '';
+  String selectedImg = '';
   List<String> imagePaths = [
     'bgImg/aatrox',
     'bgImg/ahri',
@@ -132,16 +130,16 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
   void getSummonerDataBySearchTxt(String name) {
     final context = buildContext;
     if (context == null) return;
+
+    summonerName = name;
+
     streamSubscription(
-      stream: Stream.fromFuture(repository.getSummonerByName(name)),
+      stream: Stream.fromFuture(repository.initSummonerProcess(name)),
       onShowLoading: () => showLoadingDialog(context),
       onHideLoading: () => hideLoadingDialog(context),
-      onData: (_) async {
-        summonerName = _getBgImage();
-        state = state.copyWith(
-          summonerModel: _?.$1,
-          entries: _?.$2,
-        );
+      onData: (_) {
+        selectedImg = _getBgImage();
+        state = state.copyWith(summonerModel: _);
         getMatchHistories();
       },
       onError: (e) {
@@ -165,7 +163,8 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
             return const Stream.empty();
           } else {
             state = state.copyWith(matchIds: value);
-            return Stream.fromFuture(repository.initMatchesProcess(id, value))
+            final list = value.sublist(0, 7);
+            return Stream.fromFuture(repository.initMatchesProcess(id, list))
                 .flatMap((value) => Stream.fromFuture(getShortMatches(value, puuid)));
           }
       }),
@@ -229,6 +228,7 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
       }
       list.add(MatchHistoryModel(
         summarizedMatch: SummarizedMatchModel(
+          summonerName: summonerName,
           gameInfo: info.getGameInfo(puuid),
           summonerRecord: info.getSummonerInfo(puuid),
         ),
@@ -250,16 +250,36 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     List<String>? currentMatchIds = state.matchIds;
     if (currentMatchIds == null || currentMatchIds.isEmpty) return;
 
-    startMatchId += currentMatchIds.length;
+    startMatchId += 7;
+    final ids = currentMatchIds.sublist(startMatchId);
+
+    final stream = currentMatchIds.length > 7
+        ? Rx.concatEager([
+            Stream.fromFuture(repository.initMatchesProcess(id, ids)).flatMap(
+                (value) => Stream.fromFuture(getShortMatches(value, puuid))),
+            if (ids.length < 7)
+              Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
+                  .flatMap((value) {
+                state = state.copyWith(matchIds: value);
+                final lastIdx = value?.indexOf(ids.last) ?? -1;
+                final list = value?.sublist(lastIdx + 1, startMatchId + 7);
+                return Stream.fromFuture(
+                    repository.initMatchesProcess(id, list));
+              }).flatMap((value) =>
+                      Stream.fromFuture(getShortMatches(value, puuid)))
+          ])
+        : Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
+            .flatMap((value) =>
+                Stream.fromFuture(repository.initMatchesProcess(id, value))
+                    .flatMap((value) =>
+                        Stream.fromFuture(getShortMatches(value, puuid))));
 
     streamSubscription<List<MatchHistoryModel>>(
-      stream: Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
-        .flatMap((value) => Stream.fromFuture(repository.initMatchesProcess(id, value))
-          .flatMap((value) => Stream.fromFuture(getShortMatches(value, puuid)))),
+      stream: stream,
       onShowLoading: () => showLoadingDialog(context),
       onHideLoading: () => hideLoadingDialog(context),
       onData: (_) {
-        summonerName = _getBgImage();
+        selectedImg = _getBgImage();
 
         var matches = state.matches ?? [];
         matches.addAll(_);

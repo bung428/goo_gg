@@ -29,9 +29,9 @@ import 'team_record_model.dart';
 
 class MatchInfoModel {
   DateTime? gameCreation;
-  double? gameDuration;
+  num? gameDuration;
   DateTime? gameEndTimestamp;
-  double? gameId;
+  num? gameId;
   String? gameMode;
   String? gameName;
   DateTime? gameStartTimestamp;
@@ -122,6 +122,7 @@ extension MatchInfoModelExt on MatchInfoModel {
     430 => GameType.normal,
     440 => GameType.freeRank,
     450 => GameType.aram,
+    1900 => GameType.urf,
     (_) => GameType.normal
   };
 

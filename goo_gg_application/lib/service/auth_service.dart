@@ -18,10 +18,6 @@ class AuthService {
   Future<SummonerModel?> get summonerFuture => _summoner.first;
   Stream<SummonerModel?> get summonerStream => _summoner.stream;
 
-  final _summonerEntries = BehaviorSubject<List<SummonerEntryModel>?>()..value = null;
-  Future<List<SummonerEntryModel>?> get entriesFuture => _summonerEntries.first;
-  Stream<List<SummonerEntryModel>?> get entriesStream => _summonerEntries.stream;
-
   Future<void> init() async {
     final userResult = await SharedPreferencesKey.user.get<Map>();
     if (userResult != null) {
@@ -38,10 +34,5 @@ class AuthService {
   Future<void> setSummonerInfo(SummonerModel model) async {
     print('KBg model : ${model.toJson()}');
     _summoner.value = model;
-  }
-
-  Future<void> setSummonerEntries(List<SummonerEntryModel> list) async {
-    print('KBg list : $list');
-    _summonerEntries.value = list;
   }
 }

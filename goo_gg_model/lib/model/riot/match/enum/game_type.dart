@@ -3,6 +3,7 @@ enum GameType {
   freeRank('자유 랭크', 440, 'RANKED_FLEX_SR'),
   normal('일반 게임', 430, 'NORMAL_5x5_BLIND'),
   normalDraft('일반 게임', 400, 'NORMAL_5x5_DRAFT'),
+  urf('우르프', 900, 'NORMAL_5x5_DRAFT'),
   aram('칼바람', 450, 'ARAM_5x5'),
   ;
 
