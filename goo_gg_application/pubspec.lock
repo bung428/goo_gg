@@ -202,8 +202,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: f6851937b291f3beff472a20dfc8ca29712fcf54
-      resolved-ref: f6851937b291f3beff472a20dfc8ca29712fcf54
+      ref: "127889626f664e060460bffbdf4728365ae166bf"
+      resolved-ref: "127889626f664e060460bffbdf4728365ae166bf"
       url: "https://github.com/bung428/flutter_base_template.git"
     source: git
     version: "0.0.1"
@@ -282,6 +282,13 @@ packages:
     dependency: "direct main"
     description:
       path: "../goo_gg_model"
+      relative: true
+    source: path
+    version: "0.0.1"
+  goo_opengl_plugin:
+    dependency: "direct main"
+    description:
+      path: "../../goo_opengl_plugin"
       relative: true
     source: path
     version: "0.0.1"
@@ -381,6 +388,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  native_playground_plugin:
+    dependency: "direct main"
+    description:
+      path: "../../native_playground_plugin"
+      relative: true
+    source: path
+    version: "0.0.1"
   octo_image:
     dependency: transitive
     description:

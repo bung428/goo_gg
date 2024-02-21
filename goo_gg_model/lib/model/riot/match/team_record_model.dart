@@ -1,5 +1,7 @@
 import 'package:goo_gg_model/model/riot/match/ban_model.dart';
+import 'package:goo_gg_model/model/riot/match/enum/object_type.dart';
 import 'package:goo_gg_model/model/riot/match/game_object_record_model.dart';
+import 'package:goo_gg_model/model/riot/match/object_count_model.dart';
 
 // part 'team_record_model.freezed.dart';
 // part 'team_record_model.g.dart';
@@ -37,6 +39,13 @@ class TeamRecordModel {
     teamId = json['teamId'];
     win = json['win'];
   }
+
+  List<ObjectCountModel> get objects => [
+    ObjectCountModel(type: ObjectType.baron, count: objectives?.baron?.kills ?? 0),
+    ObjectCountModel(type: ObjectType.dragon, count: objectives?.dragon?.kills ?? 0),
+    ObjectCountModel(type: ObjectType.horde, count: objectives?.horde?.kills ?? 0),
+    ObjectCountModel(type: ObjectType.riftHerald, count: objectives?.riftHerald?.kills ?? 0),
+  ];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

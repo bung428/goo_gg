@@ -5,6 +5,7 @@ import 'package:goo_gg_application/pages/login/login_page.dart';
 import 'package:goo_gg_application/pages/main/main_page.dart';
 import 'package:goo_gg_application/pages/match_detail/match_detail_page.dart';
 import 'package:goo_gg_application/pages/splash/splash_page.dart';
+import 'package:goo_gg_application/pages/test/data/test_type.dart';
 import 'package:goo_gg_application/pages/test/test_page.dart';
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/service/app_service.dart';
@@ -32,7 +33,7 @@ final appRouters = GoRouter(
           name: Routes.test.name,
           pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: TestPage(),
+              child: TestPage(state.extra as TestType),
               transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                   FadeTransition(
                     opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
@@ -71,7 +72,7 @@ final appRouters = GoRouter(
           name: Routes.matchDetail.name,
           pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: MatchDetailPage(model: state.extra as MatchHistoryModel),
+              child: MatchDetailPage(matchId: state.uri.queryParameters['matchId'] ?? ''),
               transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                   FadeTransition(
                     opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),

@@ -1,101 +1,169 @@
-import 'package:flutter/foundation.dart';
+// ignore: depend_on_referenced_packages
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
-import 'package:goo_gg_application/core/env/app_config.dart';
 import 'package:goo_gg_application/data/match/enum/game_result.dart';
 import 'package:goo_gg_application/data/match/model/game_detail_info_model.dart';
-import 'package:goo_gg_application/data/match/model/match_history_model.dart';
 import 'package:goo_gg_application/main.dart';
-import 'package:goo_gg_application/pages/main/widget/player_match_detail_widget.dart';
 import 'package:goo_gg_application/widget/app_cached_network_image.dart';
 
-class TotalView extends StatelessWidget {
-  final SummarizedMatchModel summarized;
-  final GameDetailInfoModel gameDetail;
+class TotalView extends StatefulWidget {
+  final List<PlayerInfoModel>? players;
 
-  const TotalView({super.key, required this.summarized, required this.gameDetail});
+  const TotalView({super.key, required this.players});
+
+  @override
+  State<TotalView> createState() => _TotalViewState();
+}
+
+class _TotalViewState extends State<TotalView> {
+  List<PlayersInfoDataSet> teamDataset = [];
+
+  List<PlayersInfoDataSet> sortList() {
+    if (widget.players == null) return [];
+    final blue = widget.players!.sublist(0, 5);
+    final red = widget.players!.sublist(5, 10);
+    List<PlayersInfoDataSet> result = [];
+    if (blue.first.win) {
+      result.addAll([
+        PlayersInfoDataSet(
+          color: Colors.blueAccent,
+          players: blue
+        ),
+        PlayersInfoDataSet(
+          color: Colors.redAccent,
+          players: red
+        ),
+      ]);
+    } else {
+      result.addAll([
+        PlayersInfoDataSet(
+          color: Colors.redAccent,
+          players: red
+        ),
+        PlayersInfoDataSet(
+          color: Colors.blueAccent,
+          players: blue
+        ),
+      ]);
+    }
+    return result;
+  }
+
+  @override
+  void initState() {
+    teamDataset = sortList();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant TotalView oldWidget) {
+    const equality = DeepCollectionEquality();
+    if (!equality.equals(widget.players, oldWidget.players)) {
+      teamDataset = sortList();
+      setState(() {});
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isBlue = gameDetail.blueTeamInfo
-        ?.where((e) => e.nickName?.contains(summarized.summonerName) ?? false)
-        .isNotEmpty ?? false;
-    final blueTeamColor = gameDetail.isWinBlue ? Colors.blue : Colors.red;
-    final redTeamColor = gameDetail.isWinBlue ? Colors.red : Colors.blue;
-    final test = [...gameDetail.blueTeamInfo ?? [], ...gameDetail.redTeamInfo ?? []];
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: isBlue
-          ? isBlueWinListWidget(isBlue, theme, blueTeamColor, redTeamColor)
-          : isRedWinListWidget(isBlue, theme, blueTeamColor, redTeamColor),
-    );
+    if (teamDataset.isEmpty) {
+      return const SizedBox();
+    } else {
+      return Builder(
+          builder: (context) {
+            return ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: teamDataset.map((e) {
+                  return e.players.isNotEmpty ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Divider(
+                        height: 1,
+                        thickness: 2,
+                        color: e.color,
+                      ),
+                      _buildTotalRecordWidget(theme, e.players.first.win),
+                      _buildUserRecordListWidget(e.players),
+                      const SizedBox(height: 24,),
+                    ],
+                  ) : const SizedBox();
+                }).toList()
+              // isBlue
+              //     ? isBlueWinListWidget(isBlue, theme, blueTeamColor, redTeamColor)
+              //     : isRedWinListWidget(isBlue, theme, blueTeamColor, redTeamColor),
+            );
+          }
+      );
+    }
   }
-
-  List<Widget> isBlueWinListWidget(
-    bool win,
-    ThemeData theme,
-    Color blueTeamColor,
-    Color redTeamColor,
-  ) => [
-    if (gameDetail.blueTeamInfo?.isNotEmpty == true) ... [
-      Divider(
-        height: 1,
-        thickness: 2,
-        color: blueTeamColor,
-      ),
-      _buildTotalRecordWidget(theme, win),
-      _buildUserRecordListWidget(gameDetail.blueTeamInfo!),
-    ],
-    const SizedBox(height: 12,),
-    if (gameDetail.redTeamInfo?.isNotEmpty == true) ...[
-      Divider(
-        height: 1,
-        thickness: 2,
-        color: redTeamColor,
-      ),
-      _buildTotalRecordWidget(theme, !win),
-      _buildUserRecordListWidget(gameDetail.redTeamInfo!),
-    ],
-    const SizedBox(height: 100,),
-  ];
-
-  List<Widget> isRedWinListWidget(
-    bool win,
-    ThemeData theme,
-    Color blueTeamColor,
-    Color redTeamColor
-  ) => [
-    if (gameDetail.redTeamInfo?.isNotEmpty == true) ...[
-      Divider(
-        height: 1,
-        thickness: 2,
-        color: redTeamColor,
-      ),
-      _buildTotalRecordWidget(theme, !win),
-      _buildUserRecordListWidget(gameDetail.redTeamInfo!),
-    ],
-    const SizedBox(height: 12,),
-    if (gameDetail.blueTeamInfo?.isNotEmpty == true) ... [
-      Divider(
-        height: 1,
-        thickness: 2,
-        color: blueTeamColor,
-      ),
-      _buildTotalRecordWidget(theme, win),
-      _buildUserRecordListWidget(gameDetail.blueTeamInfo!),
-    ],
-    const SizedBox(height: 100,),
-  ];
-
+  //
+  // List<Widget> isBlueWinListWidget(
+  //   bool win,
+  //   ThemeData theme,
+  //   Color blueTeamColor,
+  //   Color redTeamColor,
+  // ) => [
+  //   if (gameDetail.blueTeamInfo?.isNotEmpty == true) ... [
+  //     Divider(
+  //       height: 1,
+  //       thickness: 2,
+  //       color: blueTeamColor,
+  //     ),
+  //     _buildTotalRecordWidget(theme, win),
+  //     _buildUserRecordListWidget(gameDetail.blueTeamInfo!),
+  //   ],
+  //   const SizedBox(height: 12,),
+  //   if (gameDetail.redTeamInfo?.isNotEmpty == true) ...[
+  //     Divider(
+  //       height: 1,
+  //       thickness: 2,
+  //       color: redTeamColor,
+  //     ),
+  //     _buildTotalRecordWidget(theme, !win),
+  //     _buildUserRecordListWidget(gameDetail.redTeamInfo!),
+  //   ],
+  //   const SizedBox(height: 100,),
+  // ];
+  //
+  // List<Widget> isRedWinListWidget(
+  //   bool win,
+  //   ThemeData theme,
+  //   Color blueTeamColor,
+  //   Color redTeamColor
+  // ) => [
+  //   if (gameDetail.redTeamInfo?.isNotEmpty == true) ...[
+  //     Divider(
+  //       height: 1,
+  //       thickness: 2,
+  //       color: redTeamColor,
+  //     ),
+  //     _buildTotalRecordWidget(theme, !win),
+  //     _buildUserRecordListWidget(gameDetail.redTeamInfo!),
+  //   ],
+  //   const SizedBox(height: 12,),
+  //   if (gameDetail.blueTeamInfo?.isNotEmpty == true) ... [
+  //     Divider(
+  //       height: 1,
+  //       thickness: 2,
+  //       color: blueTeamColor,
+  //     ),
+  //     _buildTotalRecordWidget(theme, win),
+  //     _buildUserRecordListWidget(gameDetail.blueTeamInfo!),
+  //   ],
+  //   const SizedBox(height: 100,),
+  // ];
+  //
   Widget _buildUserRecordListWidget(List<PlayerInfoModel> list) {
     return Container(
       padding: const EdgeInsetsApp(horizontal: 12, vertical: 4),
       child: Column(
         children: list.map((e) {
           final child = UserRecordItemWidget(model: e);
-          final isLast = e == gameDetail.blueTeamInfo!.last;
+          final isLast = e == list.last;
           return Column(
             children: [
               child,
@@ -115,7 +183,7 @@ class TotalView extends StatelessWidget {
           Text(
             win ? GameResult.win.value : GameResult.lose.value,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: win ? Colors.blue : Colors.red
+                color: win ? Colors.blue : Colors.red
             ),
           ),
           const SizedBox(width: 8,)
@@ -123,65 +191,14 @@ class TotalView extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _buildObjectResult() {
-  //   final data = model.teamObjectInfo;
-  //   return Padding(
-  //     padding: const EdgeInsetsApp(horizontal: 16),
-  //     child: Row(
-  //       children: [
-  //         ObjectResultWidget(
-  //             baron: data?.first.baron ?? 0,
-  //             dragon: data?.first.dragon ?? 0,
-  //             horde: data?.first.horde ?? 0,
-  //             inhibitor: data?.first.inhibitor ?? 0,
-  //             riftHerald: data?.first.riftHerald ?? 0,
-  //             tower: data?.first.tower ?? 0
-  //         ),
-  //         const SizedBox(width: 4,),
-  //         Expanded(
-  //             child: Column(
-  //               children: [
-  //                 TupleValueGraphWidget(
-  //                   firstValue: data?.first.teamKills  ?? 0,
-  //                   lastValue: data?.last.teamKills ?? 0,
-  //                   isBlue: data?.first.isBlue ?? true,
-  //                   title: 'Total Kill',
-  //                 ),
-  //                 const SizedBox(height: 4,),
-  //                 TupleValueGraphWidget(
-  //                   firstValue: data?.first.teamGolds  ?? 0,
-  //                   lastValue: data?.last.teamGolds ?? 0,
-  //                   isBlue: data?.first.isBlue ?? false,
-  //                   title: 'Total Gold',
-  //                 ),
-  //               ],
-  //             )
-  //         ),
-  //         const SizedBox(width: 4,),
-  //         ObjectResultWidget(
-  //             baron: data?.last.baron ?? 0,
-  //             dragon: data?.last.dragon ?? 0,
-  //             horde: data?.last.horde ?? 0,
-  //             inhibitor: data?.last.inhibitor ?? 0,
-  //             riftHerald: data?.last.riftHerald ?? 0,
-  //             tower: data?.last.tower ?? 0
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
 
-class TeamRecordWidget extends StatelessWidget {
-  const TeamRecordWidget({super.key});
+class PlayersInfoDataSet {
+  final Color color;
+  final List<PlayerInfoModel> players;
 
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  PlayersInfoDataSet({required this.color, required this.players});
 }
-
 
 class UserRecordItemWidget extends StatelessWidget {
   final PlayerInfoModel model;

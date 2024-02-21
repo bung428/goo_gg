@@ -25,9 +25,7 @@ class SummonerModel {
   });
 
   factory SummonerModel.fromJson(Map<String, dynamic> json) {
-    final data = json['data'];
-    final entries = json['entries'];
-    List? list = entries;
+    List? entries = json['entries'];
     return SummonerModel(
       name: json['name'],
       tagLine: json['tagLine'],
@@ -37,7 +35,7 @@ class SummonerModel {
       updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       profileImg: json['profileImg'],
       summonerLevel: json['summonerLevel'],
-      entries: list?.map((e) => SummonerEntryModel.fromJson(e)).toList()
+      entries: entries?.map((e) => SummonerEntryModel.fromJson(e)).toList()
     );
   }
 

@@ -80,3 +80,26 @@ exports.matches = functions.https.onRequest(async (req, res) => {
         }
     });
 });
+
+exports.match = functions.https.onRequest(async (req, res) => {
+    corsMiddleware(req, res, async () => {
+        try {
+            if (!apiKey || Object.keys(apiKey).length === 0) {
+                console.error('Riot API key not found in Firebase Config');
+                return res.status(500).send('Internal Server Error : ApiKey');
+            }
+            const id = req.body['id'];
+            const matchId = req.body['matchId'];
+            const matchData = await match.fetchMatchDataById(apiKey, matchId);
+            const data = {
+                'matchId': matchId,
+                ...matchData,
+            }
+            await firestoreService.saveMatch(data, id);
+            res.status(200).json(data);
+        } catch (error) {
+            console.error('Error calling Riot API: ', error);
+            res.status(500).send('Internal Server Error : ' + error.message);
+        }
+    });
+});

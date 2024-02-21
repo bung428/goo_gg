@@ -54,18 +54,20 @@ class TeamObjectInfoModel {
 }
 
 class PlayerInfoModel {
-  final String? nickName;
-  final String? championUrl;
-  final int? championLevel;
+  final String nickName;
+  final String championUrl;
+  final String kda;
+  final String grade;
+  final int gold;
+  final int totalCs;
+  final int championLevel;
+  final bool isBlue;
+  final bool win;
+  final double killInvolvement;
+  final double totalCsPerMin;
   final List<String> spells;
   final List<String> runes;
-  final String? kda;
-  final String? grade;
-  final double? killInvolvement;
   final List<String> items;
-  final int? totalCs;
-  final int? gold;
-  final double? totalCsPerMin;
 
   PlayerInfoModel({
     required this.nickName,
@@ -79,6 +81,8 @@ class PlayerInfoModel {
     required this.items,
     required this.totalCs,
     required this.gold,
+    this.win = false,
+    this.isBlue = false,
     required this.totalCsPerMin,
   });
 

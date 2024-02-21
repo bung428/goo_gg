@@ -14,14 +14,14 @@ class PlayerAnalysisWidget extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomPaint(
-              size: Size(constraints.maxWidth - 32, constraints.maxHeight - 16),
-              foregroundPainter: BarChartPainter(
-                barColor: Colors.redAccent.withOpacity(0.4),
-                data: list.map((e) => e.totalDamage.toDouble()).toList(),
-                labels: list.map((e) => e.champIconData).toList(),
-              ),
-            ),
+            // CustomPaint(
+            //   size: Size(constraints.maxWidth - 32, constraints.maxHeight - 16),
+            //   foregroundPainter: BarChartPainter(
+            //     barColor: Colors.redAccent.withOpacity(0.4),
+            //     data: list.map((e) => e.totalDamage.toDouble()).toList(),
+            //     labels: list.map((e) => e.champIconData).toList(),
+            //   ),
+            // ),
           ],
         );
       }

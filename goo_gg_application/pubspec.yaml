@@ -63,7 +63,14 @@ dependencies:
   flutter_base_template:
     git:
       url: https://github.com/bung428/flutter_base_template.git
-      ref: f6851937b291f3beff472a20dfc8ca29712fcf54
+      ref: 127889626f664e060460bffbdf4728365ae166bf
+#    path: ../../flutter_base_template
+
+  native_playground_plugin:
+    path: ../../native_playground_plugin
+
+  goo_opengl_plugin:
+    path: ../../goo_opengl_plugin
 
 dev_dependencies:
   flutter_test:

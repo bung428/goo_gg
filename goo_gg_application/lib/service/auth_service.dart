@@ -2,7 +2,6 @@ import 'package:goo_gg_application/data/login/user_model.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/helper/preferences_helper.dart';
 import 'package:goo_gg_application/service/app_service.dart';
-import 'package:goo_gg_model/model/riot/summoner/summoner_entry_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
@@ -32,7 +31,6 @@ class AuthService {
   }
 
   Future<void> setSummonerInfo(SummonerModel model) async {
-    print('KBg model : ${model.toJson()}');
     _summoner.value = model;
   }
 }

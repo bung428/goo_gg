@@ -1,291 +1,133 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_template/edge_insets.dart';
+import 'package:flutter_base_template/river_pod/river_template.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goo_gg_application/pages/test/data/test_type.dart';
+import 'package:goo_gg_application/service/native_calculate_service.dart';
 
-// class TestPage extends RiverProvider<TestNotifier, void> {
-//   const TestPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context, void provider, TestNotifier notifier) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       extendBodyBehindAppBar: true,
-//       body: SafeArea(
-//         child: Stack(
-//           children: [
-//             DefaultTabController(
-//               length: 3,
-//               child: NestedScrollView(
-//                 headerSliverBuilder: (context, value) {
-//                   return [
-//                     SliverAppBar(
-//                       expandedHeight: 200.0,
-//                       flexibleSpace: FlexibleSpaceBar(),
-//                     ),
-//                     SliverPersistentHeader(
-//                       pinned: true,
-//                       delegate: _SliverAppBarDelegate(
-//                         minHeight: 90,
-//                         maxHeight: 90,
-//                         child: Container(
-//                           height: getHeight() * (1 / 11),
-//                           width: double.infinity,
-//                           color: Colors.green[200],
-//                           child: Center(
-//                             child: Text(
-//                               "TEXT",
-//                               style: TextStyle(
-//                                 fontSize: 32,
-//                                 color: Colors.white,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     SliverPersistentHeader(
-//                       pinned: true,
-//                       delegate: _SliverAppBarDelegate(
-//                         minHeight: 90,
-//                         maxHeight: 90,
-//                         child: Container(
-//                           color: Colors.green[200],
-//                           child: TabBar(
-//                             controller: _tabController,
-//                             tabs: [
-//                               Tab(
-//                                 child: Text(
-//                                   'TITLE1',
-//                                   style: TextStyle(
-//                                     color: Colors.black,
-//                                   ),
-//                                 ),
-//                               ),
-//                               Tab(
-//                                 child: Text(
-//                                   'TITLE2',
-//                                   style: TextStyle(color: Colors.black),
-//                                 ),
-//                               ),
-//                               Tab(
-//                                 child: Text(
-//                                   'TITLE3',
-//                                   style: TextStyle(color: Colors.black),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ];
-//                 },
-//                 body: TabBarView(
-//                   controller: _tabController,
-//                   children: [
-//                     SingleChildScrollView(
-//                       child: Container(
-//                         padding: EdgeInsets.only(bottom: 600),
-//                         child: Column(
-//                           children: [
-//                             // RoundedPicture(),
-//                             Icon(
-//                               Icons.favorite,
-//                               color: Colors.pink,
-//                               size: 150.0,
-//                               semanticLabel:
-//                               'Text to announce in accessibility modes',
-//                             ),
-//                             FittedBox(
-//                               child: Text("Hello World",
-//                                   style: TextStyle(
-//                                       fontWeight: FontWeight.bold,
-//                                       color: Colors.black,
-//                                       fontSize: 40)),
-//                             ),
-//                             SizedBox(
-//                               height: 20,
-//                             ),
-//                             Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 RichText(
-//                                   text: TextSpan(
-//                                       style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                           color: Colors.black,
-//                                           fontSize: 20),
-//                                       text: 'Info1:  ',
-//                                       children: [
-//                                         TextSpan(
-//                                           text: "123",
-//                                           style: TextStyle(),
-//                                         ),
-//                                       ]),
-//                                 ),
-//                                 SizedBox(
-//                                   height: 20,
-//                                 ),
-//                                 RichText(
-//                                   text: TextSpan(
-//                                       style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                           color: Colors.black,
-//                                           fontSize: 20),
-//                                       text: 'Info2:  ',
-//                                       children: [
-//                                         TextSpan(
-//                                           text: "abcd",
-//                                           style: TextStyle(),
-//                                         ),
-//                                       ]),
-//                                 ),
-//                                 SizedBox(
-//                                   height: 20,
-//                                 ),
-//                                 RichText(
-//                                   text: TextSpan(
-//                                       style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                           color: Colors.black,
-//                                           fontSize: 20),
-//                                       text: 'Info3:  ',
-//                                       children: [
-//                                         TextSpan(
-//                                           text: "xyz",
-//                                           style: TextStyle(),
-//                                         ),
-//                                       ]),
-//                                 ),
-//                               ],
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     SingleChildScrollView(
-//                       child: Container(
-//                         padding: EdgeInsets.only(bottom: 600),
-//                         child: Column(
-//                           children: [
-//                             Container(
-//                               padding: EdgeInsets.only(bottom: 600),
-//                               child: Center(
-//                                 child: Text("TITLE2"),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     SingleChildScrollView(
-//                       child: Container(
-//                         padding: EdgeInsets.only(bottom: 600),
-//                         child: Column(
-//                           children: [
-//                             Container(
-//                               padding: EdgeInsets.only(bottom: 600),
-//                               child: Center(
-//                                 child: Text("TITLE3"),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             Container(
-//               height: 90,
-//               padding: EdgeInsets.symmetric(horizontal: 15),
-//               child: InkWell(
-//                 onTap: () {},
-//                 child: Icon(Icons.arrow_back),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   @override
-//   TestNotifier createProvider(WidgetRef ref) => TestNotifier(() {});
-// }
+import 'test_notifier.dart';
 
-class TestPage extends StatefulWidget {
-  TestPage({Key? key}) : super(key: key);
+class TestPage extends RiverProvider<TestNotifier, TestViewModel> {
+  final TestType type;
+
+  const TestPage(this.type, {super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<TestPage> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  expandedHeight: 200.0,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text('My App'),
-                    background: Container(color: Colors.yellow,),
-                  ),
-                ),
-                SliverPersistentHeader(
-                  delegate: _SliverAppBarDelegate(
-                    TabBar(
-                      tabs: [
-                        Tab(text: 'Tab 1'),
-                        Tab(text: 'Tab 2'),
-                        Tab(text: 'Tab 3'),
-                      ],
-                    ),
-                  ),
-                  pinned: true,
-                ),
-              ];
-            },
-            body: TabBarView(
-              children: [
-                // TotalView(),
-                // TotalView(),
-                // TotalView(),
-              ],
-            ),
-          ),
-        ),
+  Widget build(BuildContext context, provider, TestNotifier notifier) {
+    final theme = Theme.of(context);
+    final body = switch (type) {
+      TestType.ffi => _buildCalculateWidget(theme, notifier, provider),
+      TestType.opengl => _buildRenderByOpengl(notifier, provider),
+      TestType.etc => _buildEtc(),
+    };
+    return Scaffold(
+      appBar: AppBar(),
+      body: SafeArea(
+       child: body
       ),
     );
   }
-}
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
+  Column _buildRenderByOpengl(TestNotifier notifier, TestViewModel provider) {
+    return Column(children: [
+      Expanded(
+          child: provider.textureId != -1
+              ? AspectRatio(
+            aspectRatio: 300 / 400,
+            // The flutter Texture widget draws a gpu texture using the texture id we got
+            // from the filter native implementation
+            child: Texture(
+              textureId: provider.textureId,
+            ),
+          )
+              : SizedBox()),
+      Row(
+        children: [
+          const SizedBox(width: 20),
+          const Text(
+            'Blur',
+            style: TextStyle(color: Colors.black, fontSize: 20),
+          ),
+          Expanded(
+            child: Slider(
+              value: provider.radius,
+              min: 0,
+              max: 20,
+              onChanged: notifier.changeRadius,
+            ),
+          )
+        ],
+      ),
+    ]);
+  }
 
-  _SliverAppBarDelegate(this._tabBar);
+  ListView _buildCalculateWidget(ThemeData theme, TestNotifier notifier, TestViewModel provider) {
+    return ListView(
+      padding: const EdgeInsetsApp(vertical: 12, horizontal: 16),
+      children: [
+        Row(
+          children: [
+            const Spacer(),
+            Text(
+              provider.nativeResult == 0 ? '0' : '${provider.nativeResult}',
+              textAlign: TextAlign.right,
+              style: theme.textTheme.titleLarge?.copyWith(),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 24,
+        ),
+        GridView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+          ),
+          children: notifier.numbers
+              .map(
+                (e) => InkWell(
+                  onTap: () => notifier.setModelsByValue(e),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    alignment: Alignment.center,
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.black)),
+                    child: Text(
+                      e,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Row(
+          children: [
+            Text('battery percent : ${provider.batteryPercent}'),
+            const SizedBox(
+              width: 8,
+            ),
+            ElevatedButton(
+                onPressed: notifier.getBatteryLevel,
+                child: const Text('Get Battery Level'))
+          ],
+        ),
+      ],
+    );
+  }
 
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return _tabBar;
+  Widget _buildEtc() {
+    return const Text('Etc page');
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  TestNotifier createProvider(WidgetRef ref) =>
+      TestNotifier(TestViewModel(calculateModel: CalculateModel()));
 }

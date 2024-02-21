@@ -4,6 +4,7 @@ import 'package:flutter_base_template/edge_insets.dart';
 import 'package:flutter_base_template/river_pod/river_template.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goo_gg_application/data/match/repository/match_repository.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
 import 'package:goo_gg_application/pages/main/view/home_notifier.dart';
 import 'package:goo_gg_application/pages/main/widget/match_factory/summarized_match_mobile_widget.dart';
@@ -11,8 +12,6 @@ import 'package:goo_gg_application/pages/main/widget/summoner_info_factory/summo
 import 'package:goo_gg_application/route/routes.dart';
 import 'package:goo_gg_application/widget/load_more_listview.dart';
 import 'package:goo_gg_application/widget/search_widget.dart';
-
-import '../../../widget/asset_imge_widget.dart';
 
 class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
   const HomeView({super.key});
@@ -26,7 +25,6 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
         scrollController: notifier.scrollController,
         sliverListWidget: SliverList(
           delegate: SliverChildListDelegate([
-            TextButton(onPressed: notifier.test, child: Text('test')),
             const SizedBox(height: 8,),
             SearchWidget(
               hintText: '소환사 이름을 입력해주세요.',
@@ -60,14 +58,12 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
                 itemBuilder: (context, index) {
                   final summarized = provider.matches![index].summarizedMatch;
                   final gameResult = summarized.gameInfo.gameResult;
-                  // final gameDetailInfo = provider.matches![index].gameDetailInfo;
-                  // final analysis = provider.matches![index].gameAnalysis;
                   return SummarizedMatchMobileWidget(
                     color: gameResult?.color ?? Colors.transparent,
                     summarized: summarized,
                     onTap: () => context.goNamed(
                       Routes.matchDetail.name,
-                      extra: provider.matches![index]
+                      queryParameters: {'matchId' : provider.matches![index].matchId}
                     ),
                   );
                   // return kIsWeb
@@ -98,8 +94,13 @@ class HomeView extends RiverProvider<HomeNotifier, HomeViewModel> {
 
   @override
   createProvider(WidgetRef ref) {
-    final repository = SummonerRepository().getRepoProvider(ref);
-    return HomeNotifier(HomeViewModel(), repository as SummonerRepository);
+    final match = MatchRepository().getRepoProvider(ref);
+    final summoner = SummonerRepository().getRepoProvider(ref);
+    return HomeNotifier(
+      HomeViewModel(),
+      match as MatchRepository,
+      summoner as SummonerRepository
+    );
   }
 
 }

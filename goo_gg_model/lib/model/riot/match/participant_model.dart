@@ -1,10 +1,11 @@
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
+import 'package:goo_gg_model/model/riot/match/enum/ping_type.dart';
 import 'package:goo_gg_model/model/riot/match/enum/rune_type.dart';
 import 'package:goo_gg_model/model/riot/match/enum/spell_type.dart';
 import 'package:goo_gg_model/model/riot/match/perk/rune_model.dart';
+import 'package:goo_gg_model/model/riot/match/ping_count_model.dart';
 
-import 'challenge_model.dart';
 import 'mission_model.dart';
 
 class ParticipantModel {
@@ -291,7 +292,20 @@ class ParticipantModel {
         this.visionWardsBoughtInGame,
         this.wardsKilled,
         this.wardsPlaced,
-        this.win});
+        this.win
+      });
+
+  List<PingCountModel> get pings => [
+    PingCountModel(type: PingType.back, count: getBackPings ?? 0),
+    PingCountModel(type: PingType.danger, count: dangerPings ?? 0),
+    PingCountModel(type: PingType.push, count: pushPings ?? 0),
+    PingCountModel(type: PingType.onMyWay, count: onMyWayPings ?? 0),
+    PingCountModel(type: PingType.allIn, count: allInPings ?? 0),
+    PingCountModel(type: PingType.assistMe, count: assistMePings ?? 0),
+    PingCountModel(type: PingType.needVision, count: needVisionPings ?? 0),
+    PingCountModel(type: PingType.enemyMissing, count: enemyMissingPings ?? 0),
+    PingCountModel(type: PingType.enemyVision, count: enemyVisionPings ?? 0),
+  ];
 
   ParticipantModel.fromJson(Map<String, dynamic> json) {
     allInPings = json['allInPings'];

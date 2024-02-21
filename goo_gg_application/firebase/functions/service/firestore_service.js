@@ -32,7 +32,6 @@ async function saveSummonerInfo(summonerData, accountData, entries) {
         }
         return {
             'data': data,
-            'entries': entries,
         };
     } catch (error) {
         return {
@@ -83,6 +82,16 @@ async function saveMatches(matches, id) {
 }
 
 /**
+ * saveMatch method.
+ * @param {Object} match
+ * @param {string} id
+ */
+async function saveMatch(match, id) {
+    const summonerDocRef = db.collection('summoners').doc(id);
+    await summonerDocRef.collection('matches').add(match);
+}
+
+/**
  * getMatches method.
  * @param {Array<string>} matchIds
  * @param {string} id
@@ -120,6 +129,7 @@ module.exports = {
     getSummonerInfo,
     saveSummonerInfo,
     isUpdateNeededSummonerInfo,
+    saveMatch,
     saveMatches,
     getMatches,
 };

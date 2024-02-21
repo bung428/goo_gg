@@ -1,12 +1,11 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/edge_insets.dart';
 import 'package:flutter_base_template/river_pod/river_template.dart';
 import 'package:flutter_base_template/stream_subscription.dart';
 import 'package:goo_gg_application/data/match/model/match_history_model.dart';
-import 'package:goo_gg_application/data/riot_data_cdn_url.dart';
+import 'package:goo_gg_application/data/match/repository/match_repository.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/data/summoner/repository/summoner_repository.dart';
 import 'package:goo_gg_application/service/firebase/firestore_service.dart';
@@ -45,9 +44,10 @@ class HomeViewModel {
 
 class HomeNotifier extends RiverNotifier<HomeViewModel>
     with AppStreamSubscription {
-  HomeNotifier(super.state, this.repository);
+  HomeNotifier(super.state, this.matchRepository, this.summonerRepository);
 
-  final SummonerRepository repository;
+  final MatchRepository matchRepository;
+  final SummonerRepository summonerRepository;
 
   final scrollController = ScrollController();
 
@@ -88,21 +88,6 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
         .where('name', isEqualTo: '석춧가루')
         .get();
     final model = SummonerModel.fromJson(query.docs.first.data());
-    print('KBG model : ${model.toJson()}');
-    // final matchIds = [
-    //   "KR_6930313169",
-    //   "KR_6930274134",
-    // ];
-    // final data = await FirebaseFirestore.instance
-    //     .collection('summoners')
-    //     .doc('HB2IT8tczz5EjIWV0yEbjVVkuyImTtOoFU0dMSUJPgYb5g')
-    //     .collection('matches')
-    //     .where('matchId', whereIn: matchIds)
-    //     .get();
-    // print('KBG docs : ${data.docs.length}');
-    // for (final doc in data.docs) {
-    //   print('KBG doc : ${doc.data()['metadata']}');
-    // }
   }
 
   String _getBgImage() {
@@ -134,7 +119,7 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     summonerName = name;
 
     streamSubscription(
-      stream: Stream.fromFuture(repository.initSummonerProcess(name)),
+      stream: Stream.fromFuture(summonerRepository.initSummonerProcess(name)),
       onShowLoading: () => showLoadingDialog(context),
       onHideLoading: () => hideLoadingDialog(context),
       onData: (_) {
@@ -157,14 +142,14 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     if (puuid == null || id == null) return;
 
     streamSubscription<List<MatchHistoryModel>?>(
-      stream: Stream.fromFuture(repository.initMatchIdProcess(id, puuid, startMatchId))
+      stream: Stream.fromFuture(matchRepository.initMatchIdProcess(id, puuid, startMatchId))
         .flatMap((value) {
           if (value == null) {
             return const Stream.empty();
           } else {
             state = state.copyWith(matchIds: value);
             final list = value.sublist(0, 7);
-            return Stream.fromFuture(repository.initMatchesProcess(id, list))
+            return Stream.fromFuture(matchRepository.initMatchesProcess(id, list))
                 .flatMap((value) => Stream.fromFuture(getShortMatches(value, puuid)));
           }
       }),
@@ -212,28 +197,32 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     List<MatchHistoryModel> list = [];
     List<MatchInfoModel?> infoList = matches.map((e) => e.info).toList();
 
-    for (final info in infoList) {
+    for (int index=0; index<infoList.length; index++) {
+      final info = infoList[index];
       if (info == null) continue;
 
-      List<ui.Image?> images = [];
-      for (final urlStr in info.champUrls) {
-        if (urlStr == null) continue;
-        final url = DataCdnUrl.getChampionIconUrl(urlStr);
-        final imgList = await repository.getImageData(url);
-        if (imgList == null) {
-          images.add(null);
-        } else {
-          images.add(await decodeImageFromList(imgList));
-        }
-      }
+      // List<ui.Image?> images = [];
+      // List<Uint8List?> imageUints = [];
+      // for (final urlStr in info.champUrls) {
+      //   if (urlStr == null) continue;
+      //   final url = DataCdnUrl.getChampionIconUrl(urlStr);
+      //   final imgList = await repository.getImageData(url);
+      //   if (imgList == null) {
+      //     images.add(null);
+      //     imageUints.add(null);
+      //   } else {
+      //     images.add(await decodeImageFromList(imgList));
+      //     imageUints.add(imgList);
+      //   }
+      // }
       list.add(MatchHistoryModel(
+        matchId: matches[index].matchId,
         summarizedMatch: SummarizedMatchModel(
           summonerName: summonerName,
           gameInfo: info.getGameInfo(puuid),
           summonerRecord: info.getSummonerInfo(puuid),
         ),
         gameDetailInfo: info.gameDetailInfo(),
-        gameAnalysis: info.getGameAnalysis(images),
         expanded: false,
       ));
     }
@@ -255,22 +244,22 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
 
     final stream = currentMatchIds.length > 7
         ? Rx.concatEager([
-            Stream.fromFuture(repository.initMatchesProcess(id, ids)).flatMap(
+            Stream.fromFuture(matchRepository.initMatchesProcess(id, ids)).flatMap(
                 (value) => Stream.fromFuture(getShortMatches(value, puuid))),
             if (ids.length < 7)
-              Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
+              Stream.fromFuture(matchRepository.getMatchIds(id, puuid, startMatchId))
                   .flatMap((value) {
                 state = state.copyWith(matchIds: value);
                 final lastIdx = value?.indexOf(ids.last) ?? -1;
                 final list = value?.sublist(lastIdx + 1, startMatchId + 7);
                 return Stream.fromFuture(
-                    repository.initMatchesProcess(id, list));
+                    matchRepository.initMatchesProcess(id, list));
               }).flatMap((value) =>
                       Stream.fromFuture(getShortMatches(value, puuid)))
           ])
-        : Stream.fromFuture(repository.getMatchIds(id, puuid, startMatchId))
+        : Stream.fromFuture(matchRepository.getMatchIds(id, puuid, startMatchId))
             .flatMap((value) =>
-                Stream.fromFuture(repository.initMatchesProcess(id, value))
+                Stream.fromFuture(matchRepository.initMatchesProcess(id, value))
                     .flatMap((value) =>
                         Stream.fromFuture(getShortMatches(value, puuid))));
 
