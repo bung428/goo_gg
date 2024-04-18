@@ -25,16 +25,12 @@ class MatchDetailPage
   Widget build(BuildContext context, provider, notifier) {
     final theme = Theme.of(context);
     final gameInfo = provider.gameInfo;
-    // final gameDetail = model.gameDetailInfo;
-    // final gameAnalysis = model.gameAnalysis;
-    // final mainColor = summarized.gameInfo.gameResult?.color;
-    // return Scaffold(body: SizedBox(child: TextButton(onPressed: () {},child: Text('hi')),));
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(theme, gameInfo),
-          if (provider.tabs != null) ... [
-            SliverPersistentHeader(
+        body: CustomScrollView(
+      slivers: [
+        _buildAppBar(theme, gameInfo),
+        if (provider.tabs != null) ...[
+          SliverPersistentHeader(
             pinned: true,
             delegate: _SliverAppBarDelegate(
               minHeight: 66,
@@ -46,7 +42,8 @@ class MatchDetailPage
           SliverToBoxAdapter(
             child: AppSwipeWidget<DetailTab>(
               data: DetailTab.values,
-              selectedData: provider.tabs!.firstWhere((e) => e.selected).tab.index,
+              selectedData:
+                  provider.tabs!.firstWhere((e) => e.selected).tab.index,
               swipeCallback: (_) =>
                   notifier.changeTab(DetailTab.values.elementAt(_)),
               children: [
@@ -56,14 +53,8 @@ class MatchDetailPage
             ),
           )
         ]
-          // SliverToBoxAdapter(
-          //   child: provider.tabs!.firstWhere((e) => e.selected).tab == DetailTab.total
-          //       ? TotalView(summarized: summarized, gameDetail: gameDetail)
-          //       : TeamAnalyticsView(list : gameAnalysis),
-          // )
-        ],
-      )
-    );
+      ],
+    ));
   }
 
   SliverAppBar _buildAppBar(
@@ -95,6 +86,7 @@ class MatchDetailPage
                     style: theme.textTheme.bodySmall
                         ?.copyWith(color: theme.scaffoldBackgroundColor),
                   ),
+
                   /// todo: 수치들로 재미난 컨텐츠로 이미지와 함께 보여주기 (많이 안죽었으면 생존의 왕 뭐 이런..)
                   // Text('adsf'),
                 ],
@@ -105,36 +97,33 @@ class MatchDetailPage
   }
 
   Widget _buildTabBar(
-    ThemeData theme,
-    notifier,
-    List<DetailTabModel> list,
-    Color? color
-  ) {
+      ThemeData theme, notifier, List<DetailTabModel> list, Color? color) {
     return Row(
-      children: list.map((e) => Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsetsApp(horizontal: 24),
-            child: TouchWell(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              onTap: () => notifier.changeTab(e.tab),
-              child: Container(
-                height: 48,
-                color: e.selected ? color?.withOpacity(0.2) : Colors.transparent,
-                child: Center(
-                  child: Text(
-                    e.tab.text,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                        color: e.selected ? color : theme.disabledColor
+      children: list
+          .map((e) => Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsetsApp(horizontal: 24),
+                child: TouchWell(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  onTap: () => notifier.changeTab(e.tab),
+                  child: Container(
+                    height: 48,
+                    color: e.selected
+                        ? color?.withOpacity(0.2)
+                        : Colors.transparent,
+                    child: Center(
+                      child: Text(
+                        e.tab.text,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                            color: e.selected ? color : theme.disabledColor),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          )
-      )).toList(),
+              )))
+          .toList(),
     );
   }
 

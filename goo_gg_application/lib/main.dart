@@ -5,10 +5,8 @@ import 'package:goo_gg_application/firebase_options.dart';
 import 'package:goo_gg_application/route/router.dart';
 import 'package:goo_gg_application/service/app_service.dart';
 import 'package:goo_gg_application/service/auth_service.dart';
-import 'package:goo_gg_application/service/native_calculate_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +18,6 @@ void main() async {
 
   await AuthService.instance.init();
   AppService.instance.init();
-  NativeCalculateService.instance.init();
 
   await initializeDateFormatting();
 

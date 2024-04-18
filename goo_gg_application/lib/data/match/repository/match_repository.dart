@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_template/river_pod/river_repository.dart';
 import 'package:goo_gg_application/data/riot_repository.dart';
 import 'package:goo_gg_application/service/firebase/firestore_service.dart';
-import 'package:goo_gg_application/util/datetime_util.dart';
 import 'package:goo_gg_model/model/firestore/matchId_model.dart';
 import 'package:goo_gg_model/model/riot/match/match_model.dart';
 
@@ -12,19 +11,14 @@ class MatchRepository extends RiotRepository {
     String puuid,
     int start
   ) async {
+    final matchIds = await getMatchIds(id, puuid, start);
     MatchIdModel? matchIdModel = await getMatchIdFromFirestore(id);
     if (matchIdModel == null) {
-      return await getMatchIds(id, puuid, start);
+      return matchIds;
     } else {
-      final isUpdate = DateTimeUtil().calculateDayDifference(matchIdModel.updatedAt);
-      if (isUpdate) {
-        final matchIds = await getMatchIds(id, puuid, start);
-        if (matchIds == null) return null;
-        final saved = await addMatchIdsInFirestore(matchIds, id);
-        return saved;
-      } else {
-        return matchIdModel.matchIds;
-      }
+      if (matchIds == null) return null;
+      final saved = await addMatchIdsInFirestore(matchIds, id);
+      return saved;
     }
   }
 
@@ -50,7 +44,7 @@ class MatchRepository extends RiotRepository {
       final oldData = snapshot.data();
       if (snapshot.exists && oldData != null) {
         final model = MatchIdModel.fromJson(oldData);
-        result = [...model.matchIds, ...matchIds];
+        result = [...matchIds, ...model.matchIds];
         result = result.toSet().toList();
         await doc.update({
           'matchIds': result,

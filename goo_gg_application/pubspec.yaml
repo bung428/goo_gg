@@ -61,13 +61,10 @@ dependencies:
 
   flutter_riverpod: ^2.4.9
   flutter_base_template:
-    git:
-      url: https://github.com/bung428/flutter_base_template.git
-      ref: 127889626f664e060460bffbdf4728365ae166bf
-#    path: ../../flutter_base_template
-
-  native_playground_plugin:
-    path: ../../native_playground_plugin
+#    git:
+#      url: https://github.com/bung428/flutter_base_template.git
+#      ref: 127889626f664e060460bffbdf4728365ae166bf
+    path: ../../flutter_base_template
 
   goo_opengl_plugin:
     path: ../../goo_opengl_plugin

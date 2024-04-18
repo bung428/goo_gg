@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_base_template/river_pod/river_notifier.dart';
 import 'package:goo_gg_application/service/native_calculate_service.dart';
 import 'package:goo_opengl_plugin/goo_opengl_plugin.dart';
-import 'package:native_playground_plugin/native_plugin/native_playground_plugin.dart';
 
 class TestViewModel {
   final num nativeResult;
@@ -45,7 +44,6 @@ class TestNotifier extends RiverNotifier<TestViewModel> {
   CalculateModel model = CalculateModel();
 
   final openGlPlugin = GooOpenglPlugin();
-  final _nativePlaygroundPlugin = NativePlaygroundPlugin();
 
   @override
   void onInit() async {
@@ -154,10 +152,10 @@ class TestNotifier extends RiverNotifier<TestViewModel> {
   }
 
   void getBatteryLevel() async {
-    final batteryPercent = await _nativePlaygroundPlugin.getBatteryPercent();
-    state = state.copyWith(
-      batteryPercent: batteryPercent,
-    );
+    // final batteryPercent = await _nativePlaygroundPlugin.getBatteryPercent();
+    // state = state.copyWith(
+    //   batteryPercent: batteryPercent,
+    // );
   }
 
   void changeRadius(double value) {

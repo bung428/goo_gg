@@ -82,14 +82,6 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
 
   }
   
-  void test() async {
-    final query = await FirestoreService.instance
-        .collection(StoreCollection.summoners)
-        .where('name', isEqualTo: '석춧가루')
-        .get();
-    final model = SummonerModel.fromJson(query.docs.first.data());
-  }
-
   String _getBgImage() {
     final random = Random();
     final randomIndex = random.nextInt(imagePaths.length);
@@ -174,14 +166,6 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     );
   }
 
-  // void changeMatchExpansion(int index, bool isExpanded) {
-  //   List<MatchHistoryModel>? list = state.matches;
-  //   if (list == null || list.isEmpty) return;
-  //
-  //   list[index] = list[index].copyWith(expanded: isExpanded);
-  //   state = state.copyWith(matches: list);
-  // }
-
   Future<void> searchSummoner(String name) async {
     final context = buildContext;
     if (context == null) return;
@@ -200,21 +184,6 @@ class HomeNotifier extends RiverNotifier<HomeViewModel>
     for (int index=0; index<infoList.length; index++) {
       final info = infoList[index];
       if (info == null) continue;
-
-      // List<ui.Image?> images = [];
-      // List<Uint8List?> imageUints = [];
-      // for (final urlStr in info.champUrls) {
-      //   if (urlStr == null) continue;
-      //   final url = DataCdnUrl.getChampionIconUrl(urlStr);
-      //   final imgList = await repository.getImageData(url);
-      //   if (imgList == null) {
-      //     images.add(null);
-      //     imageUints.add(null);
-      //   } else {
-      //     images.add(await decodeImageFromList(imgList));
-      //     imageUints.add(imgList);
-      //   }
-      // }
       list.add(MatchHistoryModel(
         matchId: matches[index].matchId,
         summarizedMatch: SummarizedMatchModel(

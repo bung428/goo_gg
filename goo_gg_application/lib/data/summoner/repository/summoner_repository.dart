@@ -5,21 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_template/river_pod/river_repository.dart';
 import 'package:goo_gg_application/data/riot_repository.dart';
-import 'package:goo_gg_application/data/summoner/enum/riot_api_type.dart';
 import 'package:goo_gg_application/data/summoner/model/summoner_model.dart';
 import 'package:goo_gg_application/service/auth_service.dart';
 import 'package:goo_gg_application/service/firebase/firestore_service.dart';
 import 'package:goo_gg_application/util/datetime_util.dart';
 
-const krBaseUrl = 'https://kr.api.riotgames.com';
-const asiaBaseUrl = 'https://asia.api.riotgames.com';
-
 class SummonerRepository extends RiotRepository {
-  final accountApiUrl = '$asiaBaseUrl${RiotApiType.account.api}';
-  final summonerApiUrl = '$krBaseUrl${RiotApiType.summoner.api}';
-  final matchApiUrl = '$asiaBaseUrl${RiotApiType.match.api}';
-  final leagueApiUrl = '$krBaseUrl${RiotApiType.league.api}';
-
   @override
   RiverRepository createRiverRepo() => SummonerRepository();
 
@@ -30,6 +21,7 @@ class SummonerRepository extends RiotRepository {
       final query = await FirestoreService.instance
           .collection(StoreCollection.summoners)
           .where('name', isEqualTo: name)
+          .orderBy('updatedAt', descending: true)
           .get();
       if (query.size > 0) {
         /// todo: firstore에 저장된 정보라면 하루차이 확인 후 업데이트 할지 말지 프로세스.
@@ -65,7 +57,6 @@ class SummonerRepository extends RiotRepository {
   
   Future<Uint8List?> getImageData(String url) async {
     try {
-      // final response = await dio.get(url);
       final response = await Dio().get<Uint8List>(
         url,
         options: Options(
